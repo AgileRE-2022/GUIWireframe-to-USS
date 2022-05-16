@@ -1,0 +1,19 @@
+{% extends 'project/base.html' %}
+{% block content %}
+    <form method="post" enctype="multipart/form-data">
+        {% csrf_token %}
+        <div class="mb-3">
+            <label for="project_name" class="form-label">project name</label>
+            <input type="text"
+                   name="name"
+                   id="project_name"
+                   placeholder="project name"
+                   class="form-control">
+        </div>
+        <div class="mb-3">
+            <label for="project_file" class="form-label">Salt PlantUML File</label>
+            <input type="file" name="file" id="project_file" class="form-control">
+        </div>
+        <button type="submit" class="btn btn-primary">create</button>
+    </form>
+{% endblock content %}
