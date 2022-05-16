@@ -15,12 +15,20 @@ def index(request):
 @csrf_protect
 def create(request):
     if request.method == 'POST':
-        template = loader.get_template('project/post.html')
         # Validate Input Here
         if request.FILES['file']:
-            file1 = request.FILES['file'].read()
-            print(file1)
-            # Validate File can start here
+            file = request.FILES['file']
+            print("nama file : " + file.name)
+            # validator plant UML
+            filename = file.name
+            if filename.split('.')[-1] == 'plantuml':
+                print('is plant UML')
+                arr = []
+                for line in file:
+                    arr.append(line.decode("utf-8")[0:-1])
+                print(arr)
+            else:
+                print('is not plant UML')
 
         return redirect('project_list')
         # learn how to redirect with message
