@@ -21,7 +21,8 @@ def create(request):
             print("nama file : " + file.name)
             # validator plant UML
             filename = file.name
-            if filename.split('.')[-1] == 'plantuml':
+            tipeFile = ["plantuml","PU","puml"]
+            if filename.split('.')[-1] in tipeFile:
                 print('is plant UML')
                 arr = []
                 for line in file:
