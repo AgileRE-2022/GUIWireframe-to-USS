@@ -1,4 +1,5 @@
 from django.http import HttpResponse
+from django.template.response import TemplateResponse
 from django.template import loader
 from django.shortcuts import render, redirect
 from django.views.decorators.csrf import csrf_protect
@@ -42,7 +43,11 @@ def details(request, id):
 
 # aril
 def rulesAdd(request, id):
-    return HttpResponse('ini rules add dengan id = '+ str(id))
+    args = {}
+    template = 'project/rules.html'
+    args['rules'] = ""
+    return TemplateResponse (request, template, args)
+
 
 def rulesEdit(request, id, rid):
     return HttpResponse('ini page rules edit dari id ='+str(id)+' dengan rules id = '+str(rid))
