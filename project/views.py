@@ -1,9 +1,5 @@
-from re import template
-import re
-from tempfile import tempdir
 from django.http import HttpResponse
 from django.template.response import TemplateResponse
-from django.template import loader
 from django.shortcuts import render, redirect
 from django.views.decorators.csrf import csrf_protect
 from django.template.response import TemplateResponse
@@ -12,8 +8,9 @@ from .models import Wireframe
 
 
 def index(request):
-    template = loader.get_template('project/index.html')
-    return HttpResponse(template.render())
+    args = {}
+    template = 'project/index.html'
+    return TemplateResponse(request, template, args)
 
 
 @csrf_protect
@@ -82,7 +79,9 @@ def activityEdit(request, id, aid):
 
 # ga dulu 
 def context(request, id):
-    return HttpResponse('page context dengan id = '+ str(id))
+    args = {}
+    template = 'project/context.html'
+    return TemplateResponse(request, template, args)
 
 def export(request, id):
     return HttpResponse('page export dengan id = '+ str(id))
