@@ -1,3 +1,5 @@
+from pickletools import read_bytes1
+from unicodedata import name
 from django.http import HttpResponse
 from django.template import loader
 from django.template.response import TemplateResponse
@@ -49,10 +51,22 @@ def rulesEdit(request, id, rid):
     return HttpResponse('ini page rules edit dari id ='+str(id)+' dengan rules id = '+str(rid))
 
 # rapid
+@csrf_protect
 def activityAdd(request,id):
     argActAdd= {}
-    template = 'project/ActivityAdd.html'
-    return TemplateResponse(request,template)
+    if request.method == 'POST':
+        name = request.POST.get("name Activity")
+        component = request.POST.get("Component")
+        if name is not None and component:
+            print("nama Activity "+ name +" dengan komponen yang di pilih : " + component)
+        else:
+            print("silahkan mengisi dengan benar")
+        template = 'project/ActivityAdd.html'
+        return TemplateResponse(request,template)
+    else:
+       template = 'project/ActivityAdd.html'
+       return TemplateResponse(request,template)
+    
     # return HttpResponse(template.render())
     # return HttpResponse('ini activity add dengan id = '+ str(id))
 
