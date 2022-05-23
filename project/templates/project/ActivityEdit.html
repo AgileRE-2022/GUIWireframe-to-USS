@@ -1,0 +1,11 @@
+{% extends 'project/base.html' %}
+{% block content %}
+<form method="post" enctype="multipart/form-data">
+    {% csrf_token %}
+    <div class="mb-3">
+        <label for="Activity_name" class="form-label">Activity name</label>
+        <input type="text" name="name" id="activity_name" placeholder="activity name" class="form-control">
+    </div>
+    
+</form>
+{% endblock content %}

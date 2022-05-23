@@ -1,4 +1,5 @@
 from django.http import HttpResponse
+from django.template import loader
 from django.template.response import TemplateResponse
 from django.shortcuts import render, redirect
 from django.views.decorators.csrf import csrf_protect
@@ -71,11 +72,18 @@ def rulesEdit(request, id, rid):
     return HttpResponse('ini page rules edit dari id ='+str(id)+' dengan rules id = '+str(rid))
 
 # rapid
-def activityAdd(request, id):
-    return HttpResponse('ini activity add dengan id = '+ str(id))
+def activityAdd(request,id):
+    argActAdd= {}
+    template = 'project/ActivityAdd.html'
+    return TemplateResponse(request,template)
+    # return HttpResponse(template.render())
+    # return HttpResponse('ini activity add dengan id = '+ str(id))
 
 def activityEdit(request, id, aid):
-    return HttpResponse('ini page activity edit dari id ='+str(id)+' dengan activity id = '+str(aid))
+    argActEdit={}
+    template = 'project/ActivityEdit.html'
+    return TemplateResponse(request,template)
+    # return HttpResponse('ini page activity edit dari id ='+str(id)+' dengan activity id = '+str(aid))
 
 # ga dulu 
 def context(request, id):
