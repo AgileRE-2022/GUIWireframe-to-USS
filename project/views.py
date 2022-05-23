@@ -1,7 +1,11 @@
+from re import template
+import re
+from tempfile import tempdir
 from django.http import HttpResponse
 from django.template import loader
 from django.shortcuts import render, redirect
 from django.views.decorators.csrf import csrf_protect
+from django.template.response import TemplateResponse
 
 from .models import Wireframe
 
@@ -38,7 +42,11 @@ def create(request):
 
 # dapa
 def details(request, id):
-    return HttpResponse('page details dengan id = '+ str(id))
+    # return HttpResponse('page details dengan id = '+ str(id))
+    args = {}
+    template = "project/details.html"
+    args['id'] = id
+    return TemplateResponse(request, template, args)
 
 # aril
 def rulesAdd(request, id):
