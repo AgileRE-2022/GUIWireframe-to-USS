@@ -42,11 +42,24 @@ def details(request, id):
     return HttpResponse('page details dengan id = '+ str(id))
 
 # aril
+@csrf_protect
 def rulesAdd(request, id):
     args = {}
+    if request.method == 'POST':
+        rule = request.POST.get("rule")
+        select = request.POST.get("select")
+        if rule != "":
+            print("nama rules adalah: " + rule)
+        else:
+            print("isilah dengan benar")
+            # template = 'project/rules.html'
+            # args['rules'] = ""
+            # return TemplateResponse (request, template, args)
+    
     template = 'project/rules.html'
     args['rules'] = ""
     return TemplateResponse (request, template, args)
+    
 
 
 def rulesEdit(request, id, rid):
