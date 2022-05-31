@@ -9,14 +9,14 @@
     <div class="mb-3">
         <label for="Activity_name" class="form-label">Component</label>
         <select class="custom-select custom-select-lg mb-5">
-            <option selected>Select the Component</option>
+            <option selected disable>Select the Component</option>
             <option value="1">One</option>
             <option value="2">Two</option>
             <option value="3">Three</option>
           </select> 
     </div>
     <div class="mb-3">
-        <button type="submit" class="btn btn-danger">cancel</button>
+        <a href="{% url 'project_details' 1 %}" class="btn btn-danger">cancel</a>
         <button type="submit" class="btn btn-success">create</button>
     </div>
 </form>
