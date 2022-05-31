@@ -1,8 +1,6 @@
-from re import template
-import re
-from tempfile import tempdir
 from django.http import HttpResponse
 from django.template import loader
+from django.template.response import TemplateResponse
 from django.shortcuts import render, redirect
 from django.views.decorators.csrf import csrf_protect
 from django.template.response import TemplateResponse
@@ -11,8 +9,9 @@ from .models import Wireframe
 
 
 def index(request):
-    template = loader.get_template('project/index.html')
-    return HttpResponse(template.render())
+    args = {}
+    template = 'project/index.html'
+    return TemplateResponse(request, template, args)
 
 
 @csrf_protect
@@ -49,22 +48,48 @@ def details(request, id):
     return TemplateResponse(request, template, args)
 
 # aril
+@csrf_protect
 def rulesAdd(request, id):
-    return HttpResponse('ini rules add dengan id = '+ str(id))
+    args = {}
+    if request.method == 'POST':
+        rule = request.POST.get("rule")
+        select = request.POST.get("select")
+        if rule != "":
+            print("nama rules adalah: " + rule)
+        else:
+            print("isilah dengan benar")
+            # template = 'project/rules.html'
+            # args['rules'] = ""
+            # return TemplateResponse (request, template, args)
+    
+    template = 'project/rules.html'
+    args['rules'] = ""
+    return TemplateResponse (request, template, args)
+    
+
 
 def rulesEdit(request, id, rid):
     return HttpResponse('ini page rules edit dari id ='+str(id)+' dengan rules id = '+str(rid))
 
 # rapid
-def activityAdd(request, id):
-    return HttpResponse('ini activity add dengan id = '+ str(id))
+def activityAdd(request,id):
+    argActAdd= {}
+    template = 'project/ActivityAdd.html'
+    return TemplateResponse(request,template)
+    # return HttpResponse(template.render())
+    # return HttpResponse('ini activity add dengan id = '+ str(id))
 
 def activityEdit(request, id, aid):
-    return HttpResponse('ini page activity edit dari id ='+str(id)+' dengan activity id = '+str(aid))
+    argActEdit={}
+    template = 'project/ActivityEdit.html'
+    return TemplateResponse(request,template)
+    # return HttpResponse('ini page activity edit dari id ='+str(id)+' dengan activity id = '+str(aid))
 
 # ga dulu 
 def context(request, id):
-    return HttpResponse('page context dengan id = '+ str(id))
+    args = {}
+    template = 'project/context.html'
+    return TemplateResponse(request, template, args)
 
 def export(request, id):
     return HttpResponse('page export dengan id = '+ str(id))
