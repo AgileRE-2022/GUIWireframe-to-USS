@@ -63,12 +63,7 @@ def details(request, id):
     args['id'] = id
     args['wireframe'] = Wireframe.objects.get(id=id)
     args['components'] = Component.objects.filter(wireframe_id=id)
-
-    rules = Rules.objects.all()
-    args['list_rules'] = rules
-
-    activity = Activity.objects.all()
-    args['list_activites'] = activity
+    args['activities'] = Activity.objects.filter(wireframe_id=id)
     return TemplateResponse(request, template, args)
 
 
@@ -134,7 +129,7 @@ def activityAdd(request, id):
         component = request.POST.get("Component")
         if name is not None:
             # print("nama Activity "+ name +" dengan komponen yang di pilih : " + component)
-            ac = Activity(wireframe_id=1, activity_name=name)
+            ac = Activity(wireframe_id=id, activity_name=name)
             if component is not "":
                 ac.component_id = int(component)
             ac.save()

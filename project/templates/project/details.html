@@ -34,6 +34,7 @@
                 <button class="btn btn-primary mt-3">Edit Context</button>
             </div>
         </div>
+        {% comment %} COMPONENT and RULES {% endcomment %}
         <div class="col-lg-6 col-12 mt-3 mb-2">
             <div class="h3 mb-3">List Component and Rules</div>
             <a href="{% url 'project_rules_add' wireframe.id %}"
@@ -44,32 +45,20 @@
                         {{ comp.value }} | Tipe : {{ comp.type_component }}
                     </li>
                     <ul class="list-group">
-                        <li class="list-group-item d-flex justify-content-between align-items-center">
-                            DUMMY
-                            <div>
-                                <button class="btn btn-warning">Edit</button>
-                                <button class="btn btn-danger">Delete Rules</button>
-                            </div>
-                        </li>
+                        {% for rule in comp.rules %}
+                            <li class="list-group-item d-flex justify-content-between align-items-center">
+                                {{ rule.rules_desc }}
+                                <div>
+                                    <a href="{% url 'project_rules_edit' wireframe.id rule.id %}"
+                                       class="btn btn-warning">Edit</a>
+                                    <a href="{% url 'project_rules_delete' rule.id %}"
+                                       class="btn btn-danger">Delete</a>
+                                </div>
+                            </li>
+                        {% endfor %}
                     </ul>
                 </ul>
             {% endfor %}
-            <ul class="list-group mb-3">
-                <li class="list-group-item list-group-item-primary d-flex justify-content-between align-items-center">DUMMY</li>
-                <ul class="list-group">
-                    {% for rule in list_rules %}
-                        <li class="list-group-item d-flex justify-content-between align-items-center">
-                            {{ rule.rules_desc }}
-                            <div>
-                                <a href="{% url 'project_rules_edit' wireframe.id rule.id %}"
-                                   class="btn btn-warning">Edit</a>
-                                <a href="{% url 'project_rules_delete' rule.id %}"
-                                   class="btn btn-danger">Delete</a>
-                            </div>
-                        </li>
-                    {% endfor %}
-                </ul>
-            </ul>
         </div>
         <div class="col-lg-6 col-12 mt-3 mb-2">
             <div class="h3 mb-3">List Activity</div>
@@ -79,17 +68,13 @@
                 <tr class="table-primary">
                     <th>Activity</th>
                     <th>Component</th>
-                    <th>
-                        action
-                    </th>
+                    <th>action</th>
                 </tr>
-                {% for activity in list_activites %}
+                {% for activity in activities %}
                     <tr>
+                        <td>{{ activity.activity_name }}</td>
                         <td>
-                            {{ activity.activity_name }}
-                        </td>
-                        <td>
-                            {{ activity.component_id }}
+                            {% if activity.component_id is not None %}{{ activity.comp.value }} — {{ activity.comp.type_component }}{% endif %}
                         </td>
                         <td>
                             <a href="{% url 'project_activiy_edit' id activity.id %}"
