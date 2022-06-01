@@ -10,8 +10,8 @@ class Wireframe(models.Model):
     project_password = models.TextField()
     project_uid = models.CharField(max_length=200)
 
-class Activty(models.Model):
-    wireframe_id  = models.IntegerField(max_length=200)
-    Activity_name = models.CharField(max_length=200)
+class Activity(models.Model):
+    wireframe_id  = models.IntegerField()
+    activity_name = models.CharField(max_length=200)
     #insull
-    Component_id  = models.IntegerField(null=True,max_length=200)
+    component_id  = models.IntegerField(null=True)

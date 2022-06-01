@@ -7,7 +7,7 @@ from django.shortcuts import render, redirect
 from django.views.decorators.csrf import csrf_protect
 from django.template.response import TemplateResponse
 
-from .models import Wireframe
+from .models import Wireframe,Activity
 
 
 def index(request):
@@ -78,10 +78,13 @@ def rulesEdit(request, id, rid):
 def activityAdd(request,id):
     argActAdd= {}
     if request.method == 'POST':
-        name = request.POST.get("name Activity")
+        name = request.POST.get("Activity_name")
         component = request.POST.get("Component")
         if name is not None and component:
             print("nama Activity "+ name +" dengan komponen yang di pilih : " + component)
+            ac= Activity(wireframe_id=1, activity_name= name,component_id=int(component))
+            ac.save()
+            return redirect('project_details',1)
         else:
             print("silahkan mengisi dengan benar")
         template = 'project/ActivityAdd.html'
