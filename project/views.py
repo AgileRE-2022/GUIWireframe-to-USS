@@ -5,7 +5,7 @@ from django.shortcuts import render, redirect
 from django.views.decorators.csrf import csrf_protect
 from django.template.response import TemplateResponse
 
-from .models import Wireframe
+from .models import Rules, Wireframe
 
 
 def index(request):
@@ -56,6 +56,9 @@ def rulesAdd(request, id):
         select = request.POST.get("select")
         if rule != "":
             print("nama rules adalah: " + rule)
+            r = Rules(rules_desc=rule, component_id=int(select))
+            r.save()
+            return redirect('project_details', 1)
         else:
             print("isilah dengan benar")
             # template = 'project/rules.html'
