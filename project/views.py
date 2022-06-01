@@ -47,6 +47,9 @@ def details(request, id):
     args = {}
     template = "project/details.html"
     args['id'] = id
+
+    activity = Activity.objects.all()
+    args['list_activites'] = activity
     return TemplateResponse(request, template, args)
 
 # aril
