@@ -83,9 +83,11 @@ def activityAdd(request,id):
     if request.method == 'POST':
         name = request.POST.get("Activity_name")
         component = request.POST.get("Component")
-        if name is not None and component:
-            print("nama Activity "+ name +" dengan komponen yang di pilih : " + component)
-            ac= Activity(wireframe_id=1, activity_name= name,component_id=int(component))
+        if name is not None :
+            # print("nama Activity "+ name +" dengan komponen yang di pilih : " + component)
+            ac= Activity(wireframe_id=1, activity_name= name)
+            if component is not "":
+                ac.component_id = int(component)
             ac.save()
             return redirect('project_details',1)
         else:
@@ -98,11 +100,25 @@ def activityAdd(request,id):
     
     # return HttpResponse(template.render())
     # return HttpResponse('ini activity add dengan id = '+ str(id))
-
+@csrf_protect
 def activityEdit(request, id, aid):
+    act= Activity.objects.get(id=aid)
+    if request.method == 'POST':
+        act_name = request.POST.get("Activity_name")
+        act_compo = request.POST.get("Component")
+        act.activity_name= act_name
+        if act_compo is not "" :
+            act.component_id= act_compo
+        else :
+            act.component_id= None
+        act.save()
+        return redirect('project_details',1)
+
     argActEdit={}
     template = 'project/ActivityEdit.html'
-    return TemplateResponse(request,template)
+    argActEdit['act'] = act
+    # print(act.activity_name )
+    return TemplateResponse(request,template,argActEdit)
     # return HttpResponse('ini page activity edit dari id ='+str(id)+' dengan activity id = '+str(aid))
 
 # ga dulu 
