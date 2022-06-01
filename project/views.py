@@ -73,7 +73,6 @@ def rulesAdd(request, id):
     args['rules'] = ""
     return TemplateResponse (request, template, args)
     
-
 @csrf_protect
 def rulesEdit(request, id, rid):
     rules = Rules.objects.get(id=rid)
@@ -84,12 +83,22 @@ def rulesEdit(request, id, rid):
         rules.component_id = request.POST.get("select")
         rules.save()
         return redirect('project_details', 1)
+    
+    elif request.method == 'DELETE':
+        print('Delete dijalankan')
+        rules.delete()
+        return redirect('project_details', 1)
 
     template = 'project/rulesEdit.html'
     argRuleEdit['rule'] = rules
 
     return TemplateResponse(request,template,argRuleEdit)
     # return HttpResponse('ini page rules edit dari id ='+str(id)+' dengan rules id = '+str(rid))
+
+def rulesDelete(request, del_id):
+    rules_del = Rules.objects.get(id=del_id)
+    rules_del.delete()
+    return redirect('project_details', 1)
 
 # rapid
 def activityAdd(request,id):
