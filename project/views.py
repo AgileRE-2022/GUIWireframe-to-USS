@@ -4,14 +4,16 @@ from django.template.response import TemplateResponse
 from django.shortcuts import render, redirect
 from django.views.decorators.csrf import csrf_protect
 from django.template.response import TemplateResponse
+import uuid
 
-from .models import Wireframe
+from .models import Wireframe, Rules, Activity
 from .functions.compdetector import *
 
 
 def index(request):
     args = {}
     template = 'project/index.html'
+    args['projects'] = Wireframe.objects.all()
     return TemplateResponse(request, template, args)
 
 
@@ -19,6 +21,9 @@ def index(request):
 def create(request):
     if request.method == 'POST':
         # Validate Input Here
+        name = request.POST.get('project_name')
+        password = request.POST.get('project_password')
+        filecontent = ""
         if request.FILES['file']:
             file = request.FILES['file']
             print("nama file : " + file.name)
@@ -29,11 +34,20 @@ def create(request):
                 print('is plant UML')
                 arr = []
                 for line in file:
+                    filecontent += line.decode("utf-8")
                     arr.append(line.decode("utf-8"))
                 print(arr)
+
+                w = Wireframe(
+                    project_name=name,
+                    project_password=password,
+                    project_file=filecontent,
+                    project_uid=str(uuid.uuid4()))
+                w.save()
+                    
                 arrbersih = bersih(arr)
                 print(arrbersih)
-                inspectcomp(arrbersih)
+                inspectcomp(arrbersih, w.id)
             else:
                 print('is not plant UML')
 
@@ -49,10 +63,16 @@ def details(request, id):
     args = {}
     template = "project/details.html"
     args['id'] = id
+    args['wireframe'] = Wireframe.objects.get(id=id)
 
     # Ambil Component dari database
-    args['components'] = Component.objects.all()
+    args['components'] = Component.objects.filter(wireframe_id=id)
 
+    rules = Rules.objects.all()
+    args['list_rules'] = rules
+
+    activity = Activity.objects.all()
+    args['list_activites'] = activity
     return TemplateResponse(request, template, args)
 
 # aril
@@ -64,6 +84,9 @@ def rulesAdd(request, id):
         select = request.POST.get("select")
         if rule != "":
             print("nama rules adalah: " + rule)
+            r = Rules(rules_desc=rule, component_id=int(select))
+            r.save()
+            return redirect('project_details', 1)
         else:
             print("isilah dengan benar")
             # template = 'project/rules.html'
@@ -80,10 +103,25 @@ def rulesEdit(request, id, rid):
     return HttpResponse('ini page rules edit dari id ='+str(id)+' dengan rules id = '+str(rid))
 
 # rapid
+@csrf_protect
 def activityAdd(request,id):
     argActAdd= {}
-    template = 'project/ActivityAdd.html'
-    return TemplateResponse(request,template)
+    if request.method == 'POST':
+        name = request.POST.get("Activity_name")
+        component = request.POST.get("Component")
+        if name is not None and component:
+            print("nama Activity "+ name +" dengan komponen yang di pilih : " + component)
+            ac= Activity(wireframe_id=1, activity_name= name,component_id=int(component))
+            ac.save()
+            return redirect('project_details',1)
+        else:
+            print("silahkan mengisi dengan benar")
+        template = 'project/ActivityAdd.html'
+        return TemplateResponse(request,template)
+    else:
+       template = 'project/ActivityAdd.html'
+       return TemplateResponse(request,template)
+    
     # return HttpResponse(template.render())
     # return HttpResponse('ini activity add dengan id = '+ str(id))
 

@@ -2,29 +2,13 @@
 {% block content %}
     <a href="{% url 'project_create' %}" class="btn btn-primary">Create New</a>
     <div class="row mt-2 gy-4" style="width: 50vw;">
+        {% for p in projects %}
         <div class="col-12 card">
             <div class="card-body">
-                <h5 class="card-title">Card title</h5>
-                <a href="{% url 'project_details' 1 %}" class="btn btn-primary">Go somewhere</a>
+                <h5 class="card-title">{{p.project_name}}</h5>
+                <a href="{% url 'project_details' p.id %}" class="btn btn-primary">Go Details</a>
             </div>
         </div>
-        <div class="col-12 card">
-            <div class="card-body">
-                <h5 class="card-title">Card title</h5>
-                <a href="{% url 'project_details' 1 %}" class="btn btn-primary">Go somewhere</a>
-            </div>
-        </div>
-        <div class="col-12 card">
-            <div class="card-body">
-                <h5 class="card-title">Card title</h5>
-                <a href="{% url 'project_details' 1 %}" class="btn btn-primary">Go somewhere</a>
-            </div>
-        </div>
-        <div class="col-12 card">
-            <div class="card-body">
-                <h5 class="card-title">Card title</h5>
-                <a href="{% url 'project_details' 1 %}" class="btn btn-primary">Go somewhere</a>
-            </div>
-        </div>
+        {% endfor %}
     </div>
 {% endblock content %}
