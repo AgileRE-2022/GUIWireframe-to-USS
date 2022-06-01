@@ -1,0 +1,125 @@
+{% extends 'project/base.html' %}
+{% block content %}
+<!-- {{ id }} -->
+
+<div class="h1 ">Project A</div>
+<div class="row my-5">
+    <div class="col">
+        <h4 class="mb-3">Wireframe</h4>
+        <div class="row mx-1">
+            <button class="btn btn-primary mb-2">See Script</button>
+            <button class="btn btn-primary">Export to User-Story Scenario</button>
+        </div>
+    </div>
+    <div class="col">
+        <h4 class="">Context</h4>
+        <div class="">
+            <table class="table">
+                <tr>
+                    <td>Given</td>
+                    <td>Null</td>
+                </tr>
+                <tr>
+                    <td>When</td>
+                    <td>Null</td>
+                </tr>
+                <tr>
+                    <td>Then</td>
+                    <td>Null</td>
+                </tr>
+                <tr>
+                    <td>Alternate-Then</td>
+                    <td>Null</td>
+                </tr>
+            </table>
+            <button class="btn btn-primary mt-3">Edit Context</button>
+        </div>
+    </div>
+</div>
+<div class="row">
+    <div class="col-12 my-2">
+        <h4 class="mb-3">List Component and Rules</h4>
+        <a href="{% url 'project_rules_add' 1 %}" class="btn btn-primary my-1">Add Rules</a>
+        <ul class="list-group mb-3">
+            <li class="list-group-item list-group-item-primary d-flex justify-content-between align-items-center">Email
+                Field</li>
+            <ul class="list-group">
+                <li class="list-group-item d-flex justify-content-between align-items-center">Required
+                    <div>
+                        <button class="btn btn-warning">Edit</button>
+                        <button class="btn btn-danger">Delete Rules</button>
+                    </div>
+                </li>
+                <li class="list-group-item d-flex justify-content-between align-items-center">Registered on System
+                    <div>
+                        <button class="btn btn-warning">Edit</button>
+                        <button class="btn btn-danger">Delete Rules</button>
+                    </div>
+                </li>
+            </ul>
+        </ul>
+        <ul class="list-group mb-3">
+            <li class="list-group-item list-group-item-primary d-flex justify-content-between align-items-center">Email
+                Field</li>
+            <ul class="list-group">
+                <li class="list-group-item d-flex justify-content-between align-items-center">Required
+                    <div>
+                        <a href="{% url 'project_rules_edit' 1 2 %}" class="btn btn-warning">Edit</a>
+                        <a href="#" class="btn btn-danger">Delete Rules</a>
+                    </div>
+                </li>
+                <li class="list-group-item d-flex justify-content-between align-items-center">Registered on System
+                    <div>
+                        <a href="{% url 'project_rules_edit' 1 2 %}" class="btn btn-warning">Edit</a>
+                        <a href="#" class="btn btn-danger">Delete Rules</a>
+                    </div>
+                </li>
+            </ul>
+        </ul>
+    </div>
+    <div class="col-12 my-2">
+        <h4 class="mb-3">List Activity</h4>
+        <a href="{% url 'project_activiy_add' 1 %}" class="btn btn-primary my-1">Add Activity</a>
+        <table class="table table-bordered">
+            <tr class="table-primary">
+                <th>Activity</th>
+                <th>Component</th>
+                <th>action</th>
+            </tr>
+            <tr>
+                <td>Fill</td>
+                <td>Email-Field</td>
+                <td>
+                    <a href="{% url 'project_activiy_edit' 1 2 %}" class="btn btn-warning">Edit</a>
+                    <a href="#" class="btn btn-danger">Delete</a>
+                </td>
+            </tr>
+            <tr>
+                <td>Fill</td>
+                <td>Password-Field</td>
+                <td>
+                    <a href="{% url 'project_activiy_edit' 1 2 %}" class="btn btn-warning">Edit</a>
+                    <a href="#" class="btn btn-danger">Delete</a>
+                </td>
+            </tr>
+            <tr>
+                <td>Click</td>
+                <td>Button Login</td>
+                <td>
+                    <a href="{% url 'project_activiy_edit' 1 2 %}" class="btn btn-warning">Edit</a>
+                    <a href="#" class="btn btn-danger">Delete</a>
+                </td>
+            </tr>
+            <tr>
+                <td>Stay On Page</td>
+                <td></td>
+                <td>
+                    <a href="{% url 'project_activiy_edit' 1 2 %}" class="btn btn-warning">Edit</a>
+                    <a href="#" class="btn btn-danger">Delete</a>
+                </td>
+            </tr>
+        </table>
+    </div>
+</div>
+
+{% endblock content %}
