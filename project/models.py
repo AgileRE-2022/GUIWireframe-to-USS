@@ -14,3 +14,6 @@ class Component(models.Model):
     value = models.CharField(max_length=200)
     wireframe_id = models.CharField(max_length=200)
     
+class Rules(models.Model):
+    component_id = models.IntegerField()
+    rules_desc = models.CharField(max_length=200)

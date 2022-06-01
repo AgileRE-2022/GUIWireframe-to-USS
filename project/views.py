@@ -6,7 +6,7 @@ from django.views.decorators.csrf import csrf_protect
 from django.template.response import TemplateResponse
 import uuid
 
-from .models import Wireframe
+from .models import Wireframe, Rules
 from .functions.compdetector import *
 
 
@@ -68,6 +68,8 @@ def details(request, id):
     # Ambil Component dari database
     args['components'] = Component.objects.filter(wireframe_id=id)
 
+    rules = Rules.objects.all()
+    args['list_rules'] = rules
     return TemplateResponse(request, template, args)
 
 # aril
@@ -79,6 +81,9 @@ def rulesAdd(request, id):
         select = request.POST.get("select")
         if rule != "":
             print("nama rules adalah: " + rule)
+            r = Rules(rules_desc=rule, component_id=int(select))
+            r.save()
+            return redirect('project_details', 1)
         else:
             print("isilah dengan benar")
             # template = 'project/rules.html'
