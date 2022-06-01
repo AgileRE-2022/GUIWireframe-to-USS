@@ -8,3 +8,7 @@ class Wireframe(models.Model):
     project_file = models.TextField(max_length=200)
     project_password = models.TextField()
     project_uid = models.CharField(max_length=200)
+
+class Rules(models.Model):
+    component_id = models.IntegerField()
+    rules_desc = models.CharField(max_length=200)
