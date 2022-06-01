@@ -4,6 +4,7 @@ from django.template.response import TemplateResponse
 from django.shortcuts import render, redirect
 from django.views.decorators.csrf import csrf_protect
 from django.template.response import TemplateResponse
+import uuid
 
 from .models import Wireframe
 
@@ -11,6 +12,7 @@ from .models import Wireframe
 def index(request):
     args = {}
     template = 'project/index.html'
+    args['projects'] = Wireframe.objects.all()
     return TemplateResponse(request, template, args)
 
 
@@ -18,6 +20,9 @@ def index(request):
 def create(request):
     if request.method == 'POST':
         # Validate Input Here
+        name = request.POST.get('project_name')
+        password = request.POST.get('project_password')
+        filecontent = ""
         if request.FILES['file']:
             file = request.FILES['file']
             print("nama file : " + file.name)
@@ -28,8 +33,16 @@ def create(request):
                 print('is plant UML')
                 arr = []
                 for line in file:
-                    arr.append(line.decode("utf-8")[0:-1])
+                    filecontent += line.decode("utf-8")
+                    arr.append(line.decode("utf-8"))
                 print(arr)
+
+                w = Wireframe(
+                    project_name=name,
+                    project_password=password,
+                    project_file=filecontent,
+                    project_uid=str(uuid.uuid4()))
+                w.save()
             else:
                 print('is not plant UML')
 
