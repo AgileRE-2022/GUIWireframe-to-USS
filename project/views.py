@@ -49,6 +49,10 @@ def details(request, id):
     args = {}
     template = "project/details.html"
     args['id'] = id
+
+    # Ambil Component dari database
+    args['components'] = Component.objects.all()
+
     return TemplateResponse(request, template, args)
 
 # aril
