@@ -15,25 +15,17 @@
         <div class="col-12">
             <label class="visually-hidden" for="select">Select</label>
             <select class="form-select" id="select" name="select">
-                <option selected>
-                    Choose component
-                </option>
-                <option value="1">
-                    1
-                </option>
-                <option value="2">
-                    2
-                </option>
-                <option value="3">
-                    3
-                </option>
+                <option selected disabled>Choose component</option>
+                {% for comp in components %}
+                <option value="{{comp.id}}">{{comp.value}} | {{comp.type_component}}</option>
+                {% endfor %}
             </select>
         </div>
         <div class="col-12">
             <button type="submit" class="btn btn-success">Add</button>
         </div>
         <div class="col-12">
-            <a href="{% url 'project_details' 1 %}"  class="btn btn-danger">Cancel</a>
+            <a href="{% url 'project_details' wireframe.id %}"  class="btn btn-danger">Cancel</a>
         </div>
     </form>
 {% endblock content %}

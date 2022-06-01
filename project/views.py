@@ -79,6 +79,9 @@ def details(request, id):
 @csrf_protect
 def rulesAdd(request, id):
     args = {}
+    args['wireframe'] = Wireframe.objects.get(id=id)
+    args['components'] = Component.objects.filter(wireframe_id=id)
+
     if request.method == 'POST':
         rule = request.POST.get("rule")
         select = request.POST.get("select")
@@ -86,7 +89,7 @@ def rulesAdd(request, id):
             print("nama rules adalah: " + rule)
             r = Rules(rules_desc=rule, component_id=int(select))
             r.save()
-            return redirect('project_details', 1)
+            return redirect('project_details', id)
         else:
             print("isilah dengan benar")
             # template = 'project/rules.html'
@@ -106,21 +109,24 @@ def rulesEdit(request, id, rid):
 @csrf_protect
 def activityAdd(request,id):
     argActAdd= {}
+    argActAdd['wireframe'] = Wireframe.objects.get(id=id)
+
+    # Ambil Component dari database
+    argActAdd['components'] = Component.objects.filter(wireframe_id=id)
+    
     if request.method == 'POST':
         name = request.POST.get("Activity_name")
         component = request.POST.get("Component")
         if name is not None and component:
             print("nama Activity "+ name +" dengan komponen yang di pilih : " + component)
-            ac= Activity(wireframe_id=1, activity_name= name,component_id=int(component))
+            ac= Activity(wireframe_id=id, activity_name=name, component_id=int(component))
             ac.save()
-            return redirect('project_details',1)
+            return redirect('project_details', id)
         else:
             print("silahkan mengisi dengan benar")
-        template = 'project/ActivityAdd.html'
-        return TemplateResponse(request,template)
-    else:
-       template = 'project/ActivityAdd.html'
-       return TemplateResponse(request,template)
+    
+    template = 'project/ActivityAdd.html'
+    return TemplateResponse(request,template,argActAdd)
     
     # return HttpResponse(template.render())
     # return HttpResponse('ini activity add dengan id = '+ str(id))
