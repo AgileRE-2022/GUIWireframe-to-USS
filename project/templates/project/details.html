@@ -93,7 +93,7 @@
                 <td>{{activity.component_id}}</td>
                 <td>
                     <a href="{% url 'project_activiy_edit' 1 activity.id %}" class="btn btn-warning">Edit</a>
-                    <a href="#" class="btn btn-danger">Delete</a>
+                    <a href="{% url 'project_activity_delete' activity.id %}" class="btn btn-danger">Delete</a>
                 </td>
                
             </tr>

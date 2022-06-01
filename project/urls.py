@@ -12,4 +12,6 @@ urlpatterns = [
     path('<int:id>/activity/<int:aid>/', views.activityEdit, name="project_activiy_edit"),
     path('<int:id>/context', views.context, name="project_context"),
     path('<int:id>/export', views.export, name="project_export"),
+    #test delete activity
+    path('delete_event/<del_id>',views.activityDelete,name="project_activity_delete"),
 ]

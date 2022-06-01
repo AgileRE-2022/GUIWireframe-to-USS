@@ -100,7 +100,8 @@ def activityAdd(request,id):
     
     # return HttpResponse(template.render())
     # return HttpResponse('ini activity add dengan id = '+ str(id))
-@csrf_protect
+
+# @csrf_protect
 def activityEdit(request, id, aid):
     act= Activity.objects.get(id=aid)
     if request.method == 'POST':
@@ -113,6 +114,9 @@ def activityEdit(request, id, aid):
             act.component_id= None
         act.save()
         return redirect('project_details',1)
+    # elif request.method == 'DELETE':
+    #     print("delete berhasil")
+    #     return redirect('project_details',1)
 
     argActEdit={}
     template = 'project/ActivityEdit.html'
@@ -120,7 +124,10 @@ def activityEdit(request, id, aid):
     # print(act.activity_name )
     return TemplateResponse(request,template,argActEdit)
     # return HttpResponse('ini page activity edit dari id ='+str(id)+' dengan activity id = '+str(aid))
-
+def activityDelete(request,del_id):
+    act_del= Activity.objects.get(id=del_id)
+    act_del.delete()
+    return redirect('project_details',1)
 # ga dulu 
 def context(request, id):
     args = {}
