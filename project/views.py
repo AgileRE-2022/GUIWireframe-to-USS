@@ -7,6 +7,7 @@ from django.template.response import TemplateResponse
 import uuid
 
 from .models import Wireframe
+from .functions.compdetector import *
 
 
 def index(request):
@@ -43,6 +44,10 @@ def create(request):
                     project_file=filecontent,
                     project_uid=str(uuid.uuid4()))
                 w.save()
+                    
+                arrbersih = bersih(arr)
+                print(arrbersih)
+                inspectcomp(arrbersih)
             else:
                 print('is not plant UML')
 
@@ -58,6 +63,10 @@ def details(request, id):
     args = {}
     template = "project/details.html"
     args['id'] = id
+
+    # Ambil Component dari database
+    args['components'] = Component.objects.all()
+
     return TemplateResponse(request, template, args)
 
 # aril
