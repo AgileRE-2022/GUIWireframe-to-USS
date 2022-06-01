@@ -6,7 +6,7 @@ from django.views.decorators.csrf import csrf_protect
 from django.template.response import TemplateResponse
 import uuid
 
-from .models import Wireframe, Rules
+from .models import Wireframe, Rules, Activity
 from .functions.compdetector import *
 
 
@@ -70,6 +70,9 @@ def details(request, id):
 
     rules = Rules.objects.all()
     args['list_rules'] = rules
+
+    activity = Activity.objects.all()
+    args['list_activites'] = activity
     return TemplateResponse(request, template, args)
 
 # aril
@@ -100,10 +103,25 @@ def rulesEdit(request, id, rid):
     return HttpResponse('ini page rules edit dari id ='+str(id)+' dengan rules id = '+str(rid))
 
 # rapid
+@csrf_protect
 def activityAdd(request,id):
     argActAdd= {}
-    template = 'project/ActivityAdd.html'
-    return TemplateResponse(request,template)
+    if request.method == 'POST':
+        name = request.POST.get("Activity_name")
+        component = request.POST.get("Component")
+        if name is not None and component:
+            print("nama Activity "+ name +" dengan komponen yang di pilih : " + component)
+            ac= Activity(wireframe_id=1, activity_name= name,component_id=int(component))
+            ac.save()
+            return redirect('project_details',1)
+        else:
+            print("silahkan mengisi dengan benar")
+        template = 'project/ActivityAdd.html'
+        return TemplateResponse(request,template)
+    else:
+       template = 'project/ActivityAdd.html'
+       return TemplateResponse(request,template)
+    
     # return HttpResponse(template.render())
     # return HttpResponse('ini activity add dengan id = '+ str(id))
 
