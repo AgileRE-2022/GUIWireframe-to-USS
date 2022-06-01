@@ -45,6 +45,9 @@ def details(request, id):
     args = {}
     template = "project/details.html"
     args['id'] = id
+
+    rules = Rules.objects.all()
+    args['list_rules'] = rules
     return TemplateResponse(request, template, args)
 
 # aril

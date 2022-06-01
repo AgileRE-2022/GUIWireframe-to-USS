@@ -44,12 +44,14 @@
             <li class="list-group-item list-group-item-primary d-flex justify-content-between align-items-center">Email
                 Field</li>
             <ul class="list-group">
-                <li class="list-group-item d-flex justify-content-between align-items-center">Required
+                {% for rule in list_rules %}
+                <li class="list-group-item d-flex justify-content-between align-items-center"> {{rule.rules_desc}}
                     <div>
                         <button class="btn btn-warning">Edit</button>
                         <button class="btn btn-danger">Delete Rules</button>
                     </div>
                 </li>
+                {% endfor %}
                 <li class="list-group-item d-flex justify-content-between align-items-center">Registered on System
                     <div>
                         <button class="btn btn-warning">Edit</button>
