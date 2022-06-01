@@ -1,3 +1,4 @@
+from re import template
 from django.http import HttpResponse
 from django.template import loader
 from django.template.response import TemplateResponse
@@ -100,10 +101,34 @@ def rulesAdd(request, id):
     args['rules'] = ""
     return TemplateResponse (request, template, args)
     
-
-
+@csrf_protect
 def rulesEdit(request, id, rid):
-    return HttpResponse('ini page rules edit dari id ='+str(id)+' dengan rules id = '+str(rid))
+    rules = Rules.objects.get(id=rid)
+    args = {}
+    args['wireframe'] = Wireframe.objects.get(id=id)
+    args['components'] = Component.objects.filter(wireframe_id=id)
+
+    if request.method == 'POST':
+        rules.rules_desc = request.POST.get("rule")
+        rules.component_id = request.POST.get("select")
+        rules.save()
+        return redirect('project_details', id)
+    
+    elif request.method == 'DELETE':
+        print('Delete dijalankan')
+        rules.delete()
+        return redirect('project_details', id)
+
+    template = 'project/rulesEdit.html'
+    args['rule'] = rules
+
+    return TemplateResponse(request,template,args)
+    # return HttpResponse('ini page rules edit dari id ='+str(id)+' dengan rules id = '+str(rid))
+
+def rulesDelete(request, del_id):
+    rules_del = Rules.objects.get(id=del_id)
+    rules_del.delete()
+    return redirect('project_details', 1)
 
 # rapid
 @csrf_protect

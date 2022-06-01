@@ -1,0 +1,31 @@
+{% extends 'project/base.html' %}
+{% block content %}
+    {{ rules }}
+    <h4>Add Rule</h4>
+    <form class="row row-cols-lg-auto g-3 align-items-center" method="POST">
+        {% csrf_token %}
+        <div class="col-sm-3">
+            <label class="visually-hidden" for="rule">Rules</label> 
+            <input value="{{ rule.rules_desc }}" type="text"
+                class="form-control"
+                id="rule"
+                placeholder="Input Rule"
+                name="rule">
+        </div>
+        <div class="col-12">
+            <label class="visually-hidden" for="select">Select</label>
+            <select class="form-select" id="select" name="select">
+                <option disabled>Choose component</option>
+                {% for comp in components %}
+                <option {% if comp.id == rule.component_id %}selected{% endif %} value="{{comp.id}}">{{comp.value}} | {{comp.type_component}}</option>
+                {% endfor %}
+            </select>
+        </div>
+        <div class="col-12">
+            <button type="submit" class="btn btn-success">Save Change</button>
+        </div>
+        <div class="col-12">
+            <a href="{% url 'project_details' 1 %}"  class="btn btn-danger">Cancel</a>
+        </div>
+    </form>
+{% endblock content %}
