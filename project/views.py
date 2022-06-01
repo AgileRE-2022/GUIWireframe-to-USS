@@ -7,17 +7,42 @@ import uuid
 
 from .models import Wireframe, Rules, Activity
 from .functions.compdetector import *
+from .middleware import isGuest
 
 
+@csrf_protect
 def index(request):
     args = {}
+
+    if not isGuest(request):
+        return redirect('project_details', request.session["project"])
+
+    if request.method == "POST":
+        w = Wireframe.objects.get(id=request.POST.get("id"))
+        if w.project_password == request.POST.get("password"):
+            request.session["project"] = w.id
+            request.session["project_name"] = w.project_name
+            return redirect('project_details', w.id)
+
     template = 'project/index.html'
     args['projects'] = Wireframe.objects.all()
     return TemplateResponse(request, template, args)
 
 
+def logout(request):
+    try:
+        del request.session["project"]
+        del request.session["project_name"]
+    except KeyError:
+        pass
+    return redirect('project_list')
+
+
 @csrf_protect
 def create(request):
+    if not isGuest(request):
+        return redirect('project_details', request.session["project"])
+
     if request.method == 'POST':
         # Validate Input Here
         name = request.POST.get('project_name')
@@ -58,6 +83,11 @@ def create(request):
 
 
 def details(request, id):
+    if isGuest(request):
+        return redirect('project_list')
+    elif request.session["project"] != id:
+        return redirect('project_list')
+
     args = {}
     template = "project/details.html"
     args['id'] = id
@@ -69,6 +99,11 @@ def details(request, id):
 
 @csrf_protect
 def rulesAdd(request, id):
+    if isGuest(request):
+        return redirect('project_list')
+    elif request.session["project"] != id:
+        return redirect('project_list')
+
     args = {}
     args['wireframe'] = Wireframe.objects.get(id=id)
     args['components'] = Component.objects.filter(wireframe_id=id)
@@ -90,6 +125,11 @@ def rulesAdd(request, id):
 
 @csrf_protect
 def rulesEdit(request, id, rid):
+    if isGuest(request):
+        return redirect('project_list')
+    elif request.session["project"] != id:
+        return redirect('project_list')
+
     rules = Rules.objects.get(id=rid)
     args = {}
     args['wireframe'] = Wireframe.objects.get(id=id)
@@ -113,6 +153,11 @@ def rulesEdit(request, id, rid):
 
 
 def rulesDelete(request, del_id):
+    if isGuest(request):
+        return redirect('project_list')
+    elif request.session["project"] != id:
+        return redirect('project_list')
+
     rules_del = Rules.objects.get(id=del_id)
     rules_del.delete()
     return redirect('project_details', 1)
@@ -120,6 +165,11 @@ def rulesDelete(request, del_id):
 
 @csrf_protect
 def activityAdd(request, id):
+    if isGuest(request):
+        return redirect('project_list')
+    elif request.session["project"] != id:
+        return redirect('project_list')
+
     args = {}
     args['wireframe'] = Wireframe.objects.get(id=id)
     args['components'] = Component.objects.filter(wireframe_id=id)
@@ -143,6 +193,11 @@ def activityAdd(request, id):
 
 @csrf_protect
 def activityEdit(request, id, aid):
+    if isGuest(request):
+        return redirect('project_list')
+    elif request.session["project"] != id:
+        return redirect('project_list')
+
     args = {}
     args['wireframe'] = Wireframe.objects.get(id=id)
     args['components'] = Component.objects.filter(wireframe_id=id)
@@ -167,6 +222,11 @@ def activityEdit(request, id, aid):
 
 
 def activityDelete(request, del_id):
+    if isGuest(request):
+        return redirect('project_list')
+    elif request.session["project"] != id:
+        return redirect('project_list')
+        
     act_del = Activity.objects.get(id=del_id)
     act_del.delete()
     return redirect('project_details', 1)

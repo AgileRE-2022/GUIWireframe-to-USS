@@ -3,12 +3,72 @@
     <a href="{% url 'project_create' %}" class="btn btn-primary">Create New</a>
     <div class="row mt-2 gy-4" style="width: 50vw;">
         {% for p in projects %}
-        <div class="col-12 card">
-            <div class="card-body">
-                <h5 class="card-title">{{p.project_name}}</h5>
-                <a href="{% url 'project_details' p.id %}" class="btn btn-primary">Go Details</a>
+            <div class="col-12 card">
+                <div class="card-body">
+                    <h5 class="card-title">{{ p.project_name }}</h5>
+                    <button class="btn btn-primary modal-trigger-button"
+                            data-bs-toggle="modal"
+                            data-bs-target="#exampleModal"
+                            data-id="{{ p.id }}"
+                            data-name="{{ p.project_name }}">
+                        Enter Password
+                    </button>
+                </div>
             </div>
-        </div>
         {% endfor %}
     </div>
 {% endblock content %}
+
+{% block modal %}
+    <!-- Modal -->
+    <div class="modal fade"
+         id="exampleModal"
+         tabindex="-1"
+         aria-labelledby="exampleModalLabel"
+         aria-hidden="true">
+        <div class="modal-dialog">
+            <form class="modal-content" method="POST">
+                {% csrf_token %}
+                <div class="modal-header">
+                    <h5 class="modal-title" id="exampleModalLabel">Enter Password to Access!</h5>
+                    <button type="button"
+                            class="btn-close"
+                            data-bs-dismiss="modal"
+                            aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <div class="mb-3">
+                        <input type="hidden" name="id" id="inputID">
+                        <label for="exampleInputEmail1" class="form-label">Project Name</label>
+                        <input type="text" class="form-control" id="exampleInputEmail1" disabled>
+                    </div>
+                    <div class="mb-3">
+                        <label for="exampleInputPassword1" class="form-label">Project Password</label>
+                        <input type="password"
+                               class="form-control"
+                               id="exampleInputPassword1"
+                               name="password">
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                    <button type="submit" class="btn btn-primary">Enter Project</button>
+                </div>
+            </form>
+        </div>
+    </div>
+{% endblock modal %}
+
+{% block js %}
+    <script>
+    const target = document.querySelector('#inputID')
+    const target2 = document.querySelector('#exampleInputEmail1')
+    document.querySelectorAll('.modal-trigger-button').forEach(btn => {
+        btn.addEventListener('click', ()=>{
+            target.value = btn.dataset.id
+            console.log(target.value)
+            target2.value = btn.dataset.name
+        })
+    });
+    </script>
+{% endblock js %}
