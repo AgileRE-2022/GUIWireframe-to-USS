@@ -47,7 +47,7 @@ def create(request):
                     
                 arrbersih = bersih(arr)
                 print(arrbersih)
-                inspectcomp(arrbersih)
+                inspectcomp(arrbersih, w.id)
             else:
                 print('is not plant UML')
 
@@ -63,9 +63,10 @@ def details(request, id):
     args = {}
     template = "project/details.html"
     args['id'] = id
+    args['wireframe'] = Wireframe.objects.get(id=id)
 
     # Ambil Component dari database
-    args['components'] = Component.objects.all()
+    args['components'] = Component.objects.filter(wireframe_id=id)
 
     return TemplateResponse(request, template, args)
 

@@ -6,7 +6,7 @@
         <div class="col-12 card">
             <div class="card-body">
                 <h5 class="card-title">{{p.project_name}}</h5>
-                <a href="{% url 'project_details' 1 %}" class="btn btn-primary">Go somewhere</a>
+                <a href="{% url 'project_details' p.id %}" class="btn btn-primary">Go Details</a>
             </div>
         </div>
         {% endfor %}
