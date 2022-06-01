@@ -1,3 +1,4 @@
+from re import template
 from django.http import HttpResponse
 from django.template import loader
 from django.template.response import TemplateResponse
@@ -73,9 +74,22 @@ def rulesAdd(request, id):
     return TemplateResponse (request, template, args)
     
 
-
+@csrf_protect
 def rulesEdit(request, id, rid):
-    return HttpResponse('ini page rules edit dari id ='+str(id)+' dengan rules id = '+str(rid))
+    rules = Rules.objects.get(id=rid)
+    argRuleEdit = {}
+
+    if request.method == 'POST':
+        rules.rules_desc = request.POST.get("rule")
+        rules.component_id = request.POST.get("select")
+        rules.save()
+        return redirect('project_details', 1)
+
+    template = 'project/rulesEdit.html'
+    argRuleEdit['rule'] = rules
+
+    return TemplateResponse(request,template,argRuleEdit)
+    # return HttpResponse('ini page rules edit dari id ='+str(id)+' dengan rules id = '+str(rid))
 
 # rapid
 def activityAdd(request,id):
