@@ -6,6 +6,7 @@ from django.views.decorators.csrf import csrf_protect
 from django.template.response import TemplateResponse
 
 from .models import Wireframe
+from .functions.compdetector import *
 
 
 def index(request):
@@ -28,8 +29,11 @@ def create(request):
                 print('is plant UML')
                 arr = []
                 for line in file:
-                    arr.append(line.decode("utf-8")[0:-1])
+                    arr.append(line.decode("utf-8"))
                 print(arr)
+                arrbersih = bersih(arr)
+                print(arrbersih)
+                inspectcomp(arrbersih)
             else:
                 print('is not plant UML')
 
