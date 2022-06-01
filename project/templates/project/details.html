@@ -36,7 +36,8 @@
         </div>
         <div class="col-lg-6 col-12 mt-3 mb-2">
             <div class="h3 mb-3">List Component and Rules</div>
-            <a href="{% url 'project_rules_add' wireframe.id %}" class="btn btn-primary my-1">Add Rules</a>
+            <a href="{% url 'project_rules_add' wireframe.id %}"
+               class="btn btn-primary my-1">Add Rules</a>
             {% for comp in components %}
                 <ul class="list-group mb-3">
                     <li class="list-group-item list-group-item-primary d-flex justify-content-between align-items-center">
@@ -54,41 +55,49 @@
                 </ul>
             {% endfor %}
             <ul class="list-group mb-3">
-                <li class="list-group-item list-group-item-primary d-flex justify-content-between align-items-center">
-                    DUMMY
-                </li>
+                <li class="list-group-item list-group-item-primary d-flex justify-content-between align-items-center">DUMMY</li>
                 <ul class="list-group">
                     {% for rule in list_rules %}
-                    <li class="list-group-item d-flex justify-content-between align-items-center"> {{rule.rules_desc}}
-                        <div>
-                            <a href="{% url 'project_rules_edit' wireframe.id rule.id %}" class="btn btn-warning">Edit</a>
-                            <a href="{% url 'project_rules_delete' rule.id %}" class="btn btn-danger">Delete</a>
-                        </div>
-                    </li>
+                        <li class="list-group-item d-flex justify-content-between align-items-center">
+                            {{ rule.rules_desc }}
+                            <div>
+                                <a href="{% url 'project_rules_edit' wireframe.id rule.id %}"
+                                   class="btn btn-warning">Edit</a>
+                                <a href="{% url 'project_rules_delete' rule.id %}"
+                                   class="btn btn-danger">Delete</a>
+                            </div>
+                        </li>
                     {% endfor %}
                 </ul>
             </ul>
         </div>
         <div class="col-lg-6 col-12 mt-3 mb-2">
             <div class="h3 mb-3">List Activity</div>
-            <a href="{% url 'project_activiy_add' wireframe.id %}" class="btn btn-primary my-1">Add Activity</a>
+            <a href="{% url 'project_activiy_add' wireframe.id %}"
+               class="btn btn-primary my-1">Add Activity</a>
             <table class="table table-bordered">
                 <tr class="table-primary">
                     <th>Activity</th>
                     <th>Component</th>
-                    <th>action</th>
+                    <th>
+                        action
+                    </th>
                 </tr>
                 {% for activity in list_activites %}
-                <tr>
-                    
-                    <td>{{activity.activity_name}}</td>
-                    <td>{{activity.component_id}}</td>
-                    <td>
-                        <a href="{% url 'project_activiy_edit' 1 2 %}" class="btn btn-warning">Edit</a>
-                        <a href="#" class="btn btn-danger">Delete</a>
-                    </td>
-                   
-                </tr>
+                    <tr>
+                        <td>
+                            {{ activity.activity_name }}
+                        </td>
+                        <td>
+                            {{ activity.component_id }}
+                        </td>
+                        <td>
+                            <a href="{% url 'project_activiy_edit' id activity.id %}"
+                               class="btn btn-warning">Edit</a>
+                            <a href="{% url 'project_activity_delete' activity.id %}"
+                               class="btn btn-danger">Delete</a>
+                        </td>
+                    </tr>
                 {% endfor %}
             </table>
         </div>

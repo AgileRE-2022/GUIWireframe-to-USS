@@ -1,23 +1,36 @@
 {% extends 'project/base.html' %}
 {% block content %}
-<form method="post" enctype="multipart/form-data">
-    {% csrf_token %}
-    <div class="mb-3">
-        <label for="Activity_name" class="form-label">Activity name</label>
-        <input value="mengisi bla bla bla" type="text" name="name" id="activity_name" placeholder="activity name" class="form-control">
-    </div>
-    <div class="mb-3">
-        <label for="Activity_name" class="form-label">Component</label>
-        <select class="custom-select custom-select-lg mb-5">
-            <option disable>Select the Component</option>
-            <option selected value="1">One</option>
-            <option value="2">Two</option>
-            <option value="3">Three</option>
-          </select> 
-    </div>
-    <div class="mb-3">
-        <a href="{% url 'project_details' 1 %}" class="btn btn-danger">cancel</a>
-        <button type="submit" class="btn btn-success">save change</button>
-    </div>
-</form>
+    <form method="post" enctype="multipart/form-data">
+        {% csrf_token %}
+        <div class="mb-3">
+            <label for="Activity_name" class="form-label">Activity Name</label>
+            <input value="{{ act.activity_name }}"
+                   type="text"
+                   name="Activity_name"
+                   id="activity_name"
+                   placeholder="activity name"
+                   class="form-control">
+        </div>
+        <div class="mb-3">
+            <label for="Activity_name" class="form-label">Component</label>
+            <select class="custom-select custom-select-lg mb-5"name="Component">
+                <option disabled>
+                    Select the Component
+                </option>
+                <option {% if act.component_id == None %}selected{% endif %} value="">
+                    Tanpa Komponen
+                </option>
+                {% for comp in components %}
+                    <option {% if act.component_id == comp.id %}selected{% endif %}
+                            value="{{ comp.id }}">
+                        {{ comp.value }} | {{ comp.type_component }}
+                    </option>
+                {% endfor %}
+            </select>
+        </div>
+        <div class="mb-3">
+            <a href="{% url 'project_details' 1 %}" class="btn btn-danger">cancel</a>
+            <button type="submit" class="btn btn-success">save change</button>
+        </div>
+    </form>
 {% endblock content %}
