@@ -9,27 +9,41 @@
             </div>
         </div>
         <div class="col-12 col-lg-6 mb-2 mt-3">
-            <div class="h3 ">Context</div>
+            <div class="h3">Context</div>
             <div class="">
-                <table class="table">
-                    <tr>
-                        <td>Given</td>
-                        <td>Null</td>
-                    </tr>
-                    <tr>
-                        <td>When</td>
-                        <td>Null</td>
-                    </tr>
-                    <tr>
-                        <td>Then</td>
-                        <td>Null</td>
-                    </tr>
-                    <tr>
-                        <td>Alternate-Then</td>
-                        <td>Null</td>
-                    </tr>
-                </table>
-                <a href="{% url 'project_context' request.session.project %}" class="btn btn-primary mt-3">Edit Context</a>
+                <ul class="list-group mb-3">
+                    <li class="list-group-item list-group-item-primary d-flex justify-content-between align-items-center">
+                        <strong class="">Given</strong>
+                        <button data-bs-toggle="modal"
+                                data-bs-target="#ctxGivenModal"
+                                id="add-ctx-given"
+                                class="ml-2 btn btn-primary">
+                            Add
+                        </button>
+                    </li>
+                    <ul class="list-group">
+                        {% for g in context.given %}
+                            <li class="list-group-item  d-flex justify-content-between align-items-center">
+                                <div class="">
+                                    {{ g.context_statement }}
+                                    {% if g.component_id != None %}<strong>for</strong> {{ g.comp.value }} ({{ g.comp.type_component }}){% endif %}
+                                </div>
+                                <div class="">
+                                    <button class="btn btn-warning edit-ctx-given"
+                                            data-bs-toggle="modal"
+                                            data-bs-target="#ctxGivenModal"
+                                            data-id="{{ g.id }}"
+                                            data-statement="{{ g.context_statement }}"
+                                            data-component="{{ g.component_id }}">
+                                        Edit
+                                    </button>
+                                    <button class="btn btn-danger">Delete</button>
+                                </div>
+                            </li>
+                        {% endfor %}
+                    </ul>
+                </ul>
+                <a href="{% url 'project_context' request.session.project %}" class="btn btn-primary mt-3">Halaman Lama Context</a>
             </div>
         </div>
         {% comment %} COMPONENT and RULES {% endcomment %}
@@ -72,7 +86,10 @@
                     <tr>
                         <td>{{ activity.activity_name }}</td>
                         <td>
-                            {% if activity.component_id is not None %}{{ activity.comp.value }} — {{ activity.comp.type_component }}{% endif %}
+                            {% if activity.component_id is not None %}
+                                {{ activity.comp.value }} —
+                                {{ activity.comp.type_component }}
+                            {% endif %}
                         </td>
                         <td>
                             <a href="{% url 'project_activiy_edit' request.session.project activity.id %}"
@@ -86,3 +103,93 @@
         </div>
     </div>
 {% endblock content %}
+{% block modal %}
+    <div class="modal fade"
+         id="ctxGivenModal"
+         tabindex="-1"
+         aria-labelledby="ctxGivenModalLabel"
+         aria-hidden="true">
+        <div class="modal-dialog">
+            <form action="{% url 'project_context_given' request.session.project %}"
+                  class="modal-content"
+                  method="post">
+                {% csrf_token %}
+                <div class="modal-header">
+                    <h5 class="modal-title" id="ctxGivenModalLabel">Add Given</h5>
+                    <button type="button"
+                            class="btn-close"
+                            data-bs-dismiss="modal"
+                            aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <input type="hidden" name="c_id" class="given-c_id">
+                    <input type="text"
+                           name="statement"
+                           class="form-control given-statement"
+                           id=""
+                           placeholder="Some Statement">
+                    <div class="m-3">
+                        for
+                    </div>
+                    <select class="form-select given-component"
+                            name="component"
+                            aria-label="Default select example">
+                        <option selected disabled>
+                            Select Component
+                        </option>
+                        <option value="">
+                            no component
+                        </option>
+                        {% for c in components %}
+                            <option value="{{ c.id }}">
+                                {{ c.value }} | {{ c.type_component }}
+                            </option>
+                        {% endfor %}
+                    </select>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-danger" data-bs-dismiss="modal">
+                        Cancel
+                    </button>
+                    <button type="submit" class="btn btn-primary">
+                        Save
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+{% endblock modal %}
+{% block js %}
+    <script>
+    const givenModal = document.querySelector('#ctxGivenModal')
+    document.querySelectorAll('.edit-ctx-given').forEach(btn => {
+        btn.addEventListener('click', () => {
+            givenModal.querySelector('.modal-title').innerHTML = "Edit Given"
+            givenModal.querySelector('.given-c_id').value = btn.dataset.id
+            givenModal.querySelector('.given-statement').value = btn.dataset.statement
+            var selectedIndex = 0
+            if(btn.dataset.component == "None"){
+                selectedIndex = 1
+            }else{
+                try {
+                    givenModal.querySelectorAll('option').forEach(e => {
+                        if (e.value == btn.dataset.component) {
+                            throw 'Break'
+                        }
+                        selectedIndex++
+                    })
+                } catch (e) {
+                    if (e !== 'Break') throw e
+                }
+            }
+            givenModal.querySelector('select').selectedIndex = selectedIndex
+        })
+    })
+    document.querySelector('#add-ctx-given').addEventListener('click', () => {
+        givenModal.querySelector('.modal-title').innerHTML = "Add Given"
+        givenModal.querySelector('.given-c_id').value = null
+        givenModal.querySelector('.given-statement').value = null
+        givenModal.querySelector('select').selectedIndex = 0
+    })
+    </script>
+{% endblock js %}

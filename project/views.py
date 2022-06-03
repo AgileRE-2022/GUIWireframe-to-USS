@@ -5,7 +5,7 @@ from django.views.decorators.csrf import csrf_protect
 from django.template.response import TemplateResponse
 import uuid
 
-from .models import Wireframe, Rules, Activity
+from .models import Context, Wireframe, Rules, Activity
 from .functions.compdetector import *
 from .middleware import isGuest
 
@@ -82,6 +82,7 @@ def create(request):
         return TemplateResponse(request, template, args)
 
 
+@csrf_protect
 def details(request, id):
     if isGuest(request):
         return redirect('project_list')
@@ -93,6 +94,11 @@ def details(request, id):
     args['wireframe'] = Wireframe.objects.get(id=id)
     args['components'] = Component.objects.filter(wireframe_id=id)
     args['activities'] = Activity.objects.filter(wireframe_id=id)
+
+    ctx = {}
+    ctx["given"] = Context.objects.filter(context_type="given")
+
+    args["context"] = ctx
     return TemplateResponse(request, template, args)
 
 
@@ -227,6 +233,7 @@ def activityDelete(request, id, del_id):
     return redirect('project_details', 1)
 
 
+@csrf_protect
 def context(request, id):
     args = {}
     template = 'project/context.html'
@@ -235,3 +242,79 @@ def context(request, id):
 
 def export(request, id):
     return HttpResponse('page export dengan id = ' + str(id))
+
+
+@csrf_protect
+def ctxGiven(request, id):
+    statement = request.POST.get("statement")
+    component = request.POST.get("component")
+    c_id = request.POST.get("c_id")
+    if statement is not None and component is not None:
+        if c_id is not None and c_id is not "":
+            c = Context.objects.get(id=c_id)
+            if component is "":
+                c.component_id = None
+            else:
+                c.component_id = component
+            c.context_statement = statement
+            c.save()
+        else:
+            c = Context(
+                wireframe_id=request.session["project"],
+                context_type="given",
+                component_id=component,
+                activity_id=None,
+                context_conjunction="for",
+                context_statement=statement
+            )
+            c.save()
+    return redirect('project_details', request.session["project"])
+
+
+@csrf_protect
+def ctxWhen(request, id):
+    statement = request.POST.get("statement")
+    component = request.POST.get("component")
+    conjunction = request.POST.get("conjunction")
+    c_id = request.POST.get("c_id")
+    if statement is not None and component is not None and conjunction is not None:
+        if c_id is not None and c_id is not "":
+            c = Context.objects.get(id=c_id)
+            c.component_id = component
+            c.context_conjunction = conjunction,
+            c.context_statement = statement
+            c.save()
+        else:
+            c = Context(
+                wireframe_id=request.session["project"],
+                context_type="when",
+                component_id=component,
+                activity_id=None,
+                context_conjunction=conjunction,
+                context_statement=statement
+            )
+        c.save()
+    return redirect('project_details', request.session["project"])
+
+
+@csrf_protect
+def ctxThen(request, id):
+    activity = request.POST.get("activity")
+    type = request.POST.get("type")
+    c_id = request.POST.get("c_id")
+    if activity is not None and type is not None:
+        if c_id is not None and c_id is not "":
+            c = Context.objects.get(id=c_id)
+            c.activity_id = activity,
+            c.save()
+        else:
+            c = Context(
+                wireframe_id=request.session["project"],
+                context_type=type,
+                component_id=None,
+                activity_id=activity,
+                context_conjunction=None,
+                context_statement=None
+            )
+            c.save()
+    return redirect('project_details', request.session["project"])
