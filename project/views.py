@@ -90,7 +90,6 @@ def details(request, id):
 
     args = {}
     template = "project/details.html"
-    args['id'] = id
     args['wireframe'] = Wireframe.objects.get(id=id)
     args['components'] = Component.objects.filter(wireframe_id=id)
     args['activities'] = Activity.objects.filter(wireframe_id=id)
@@ -105,7 +104,6 @@ def rulesAdd(request, id):
         return redirect('project_list')
 
     args = {}
-    args['wireframe'] = Wireframe.objects.get(id=id)
     args['components'] = Component.objects.filter(wireframe_id=id)
 
     if request.method == 'POST':
@@ -132,7 +130,6 @@ def rulesEdit(request, id, rid):
 
     rules = Rules.objects.get(id=rid)
     args = {}
-    args['wireframe'] = Wireframe.objects.get(id=id)
     args['components'] = Component.objects.filter(wireframe_id=id)
 
     if request.method == 'POST':
@@ -152,7 +149,7 @@ def rulesEdit(request, id, rid):
     return TemplateResponse(request, template, args)
 
 
-def rulesDelete(request, del_id):
+def rulesDelete(request, id, del_id):
     if isGuest(request):
         return redirect('project_list')
     elif request.session["project"] != id:
@@ -171,13 +168,12 @@ def activityAdd(request, id):
         return redirect('project_list')
 
     args = {}
-    args['wireframe'] = Wireframe.objects.get(id=id)
     args['components'] = Component.objects.filter(wireframe_id=id)
 
     if request.method == 'POST':
         name = request.POST.get("Activity_name")
         component = request.POST.get("Component")
-        if name is not None:
+        if name is not None and component is not None:
             # print("nama Activity "+ name +" dengan komponen yang di pilih : " + component)
             ac = Activity(wireframe_id=id, activity_name=name)
             if component is not "":
@@ -199,7 +195,6 @@ def activityEdit(request, id, aid):
         return redirect('project_list')
 
     args = {}
-    args['wireframe'] = Wireframe.objects.get(id=id)
     args['components'] = Component.objects.filter(wireframe_id=id)
     act = Activity.objects.get(id=aid)
 
@@ -221,12 +216,12 @@ def activityEdit(request, id, aid):
     return TemplateResponse(request, template, args)
 
 
-def activityDelete(request, del_id):
+def activityDelete(request, id, del_id):
     if isGuest(request):
         return redirect('project_list')
     elif request.session["project"] != id:
         return redirect('project_list')
-        
+
     act_del = Activity.objects.get(id=del_id)
     act_del.delete()
     return redirect('project_details', 1)

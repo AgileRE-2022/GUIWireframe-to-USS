@@ -24,7 +24,7 @@
             <button type="submit" class="btn btn-success">Add</button>
         </div>
         <div class="col-12">
-            <a href="{% url 'project_details' wireframe.id %}"  class="btn btn-danger">Cancel</a>
+            <a href="{% url 'project_details' request.session.project %}"  class="btn btn-danger">Cancel</a>
         </div>
     </form>
 {% endblock content %}

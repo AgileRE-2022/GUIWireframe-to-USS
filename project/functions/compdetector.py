@@ -21,6 +21,7 @@ def bersih(salt):
         s[i] = s[i][inc:len(s[i])]
         s[i] = s[i].replace("\r","")
         s[i] = s[i].replace("\n","")
+        s[i] = s[i].replace("\t","")
     return s
 
 def checkbox(salt, id):

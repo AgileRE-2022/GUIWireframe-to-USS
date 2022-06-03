@@ -29,7 +29,7 @@
                         <td>Null</td>
                     </tr>
                 </table>
-                <button class="btn btn-primary mt-3">Edit Context</button>
+                <a href="{% url 'project_context' request.session.project %}" class="btn btn-primary mt-3">Edit Context</a>
             </div>
         </div>
         {% comment %} COMPONENT and RULES {% endcomment %}
@@ -47,9 +47,9 @@
                             <li class="list-group-item d-flex justify-content-between align-items-center">
                                 {{ rule.rules_desc }}
                                 <div>
-                                    <a href="{% url 'project_rules_edit' wireframe.id rule.id %}"
+                                    <a href="{% url 'project_rules_edit' request.session.project rule.id %}"
                                        class="btn btn-warning">Edit</a>
-                                    <a href="{% url 'project_rules_delete' rule.id %}"
+                                    <a href="{% url 'project_rules_delete' request.session.project rule.id %}"
                                        class="btn btn-danger">Delete</a>
                                 </div>
                             </li>
@@ -75,9 +75,9 @@
                             {% if activity.component_id is not None %}{{ activity.comp.value }} — {{ activity.comp.type_component }}{% endif %}
                         </td>
                         <td>
-                            <a href="{% url 'project_activiy_edit' id activity.id %}"
+                            <a href="{% url 'project_activiy_edit' request.session.project activity.id %}"
                                class="btn btn-warning">Edit</a>
-                            <a href="{% url 'project_activity_delete' activity.id %}"
+                            <a href="{% url 'project_activity_delete' request.session.project activity.id %}"
                                class="btn btn-danger">Delete</a>
                         </td>
                     </tr>

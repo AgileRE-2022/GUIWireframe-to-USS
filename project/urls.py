@@ -12,7 +12,7 @@ urlpatterns = [
     path('<int:id>/activity/<int:aid>/', views.activityEdit, name="project_activiy_edit"),
     path('<int:id>/context', views.context, name="project_context"),
     path('<int:id>/export', views.export, name="project_export"),
-    path('delete_rules/<del_id>', views.rulesDelete, name="project_rules_delete"),
-    path('delete_event/<del_id>',views.activityDelete,name="project_activity_delete"),
+    path('<int:id>/delete_rules/<del_id>', views.rulesDelete, name="project_rules_delete"),
+    path('<int:id>/delete_event/<del_id>',views.activityDelete,name="project_activity_delete"),
     path('logout', views.logout, name="project_logout")
 ]

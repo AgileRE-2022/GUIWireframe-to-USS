@@ -6,6 +6,7 @@
             <label for="Activity_name" class="form-label">Activity Name</label>
             <input value="{{ act.activity_name }}"
                    type="text"
+                   required
                    name="Activity_name"
                    id="activity_name"
                    placeholder="activity name"
@@ -13,7 +14,7 @@
         </div>
         <div class="mb-3">
             <label for="Activity_name" class="form-label">Component</label>
-            <select class="custom-select custom-select-lg mb-5"name="Component">
+            <select class="form-select mb-5"name="Component">
                 <option disabled>
                     Select the Component
                 </option>
@@ -29,7 +30,7 @@
             </select>
         </div>
         <div class="mb-3">
-            <a href="{% url 'project_details' 1 %}" class="btn btn-danger">cancel</a>
+            <a href="{% url 'project_details' request.session.project %}" class="btn btn-danger">cancel</a>
             <button type="submit" class="btn btn-success">save change</button>
         </div>
     </form>
