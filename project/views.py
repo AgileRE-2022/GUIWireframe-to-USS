@@ -94,10 +94,11 @@ def details(request, id):
     args['wireframe'] = Wireframe.objects.get(id=id)
     args['components'] = Component.objects.filter(wireframe_id=id)
     args['activities'] = Activity.objects.filter(wireframe_id=id)
+    #args['rules'] = Rules.objects.filter(wireframe_id=id)
 
     ctx = {}
     ctx["given"] = Context.objects.filter(context_type="given")
-
+    ctx["when"] = Context.objects.filter(context_type="when")
     args["context"] = ctx
     return TemplateResponse(request, template, args)
 
@@ -259,6 +260,8 @@ def ctxGiven(request, id):
             c.context_statement = statement
             c.save()
         else:
+            if component == "":
+                component = None
             c = Context(
                 wireframe_id=request.session["project"],
                 context_type="given",
@@ -274,21 +277,22 @@ def ctxGiven(request, id):
 @csrf_protect
 def ctxWhen(request, id):
     statement = request.POST.get("statement")
-    component = request.POST.get("component")
+    rule = request.POST.get("rule")
     conjunction = request.POST.get("conjunction")
     c_id = request.POST.get("c_id")
-    if statement is not None and component is not None and conjunction is not None:
+    if statement is not None and rule is not None and conjunction is not None:
         if c_id is not None and c_id is not "":
             c = Context.objects.get(id=c_id)
-            c.component_id = component
-            c.context_conjunction = conjunction,
+            # c.component_id = rule
+            c.context_conjunction = conjunction
             c.context_statement = statement
             c.save()
         else:
             c = Context(
                 wireframe_id=request.session["project"],
                 context_type="when",
-                component_id=component,
+                component_id= None,
+                rule_id=rule,
                 activity_id=None,
                 context_conjunction=conjunction,
                 context_statement=statement

@@ -20,7 +20,8 @@ class Component(models.Model):
 class Rules(models.Model):
     component_id = models.IntegerField()
     rules_desc = models.CharField(max_length=200)
-
+    def comp(self):
+        return Component.objects.get(id=self.component_id)
 
 class Activity(models.Model):
     wireframe_id = models.IntegerField()
@@ -42,3 +43,6 @@ class Context(models.Model):
 
     def comp(self):
         return Component.objects.get(id=self.component_id)
+
+    def rule(self):
+        return Rules.objects.get(id=self.rule_id)
