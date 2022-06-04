@@ -97,6 +97,7 @@ def details(request, id):
 
     ctx = {}
     ctx["given"] = Context.objects.filter(context_type="given")
+    ctx["then"] = Context.objects.filter(context_type="then")
 
     args["context"] = ctx
     return TemplateResponse(request, template, args)
@@ -300,9 +301,9 @@ def ctxWhen(request, id):
 @csrf_protect
 def ctxThen(request, id):
     activity = request.POST.get("activity")
-    type = request.POST.get("type")
+    tipe = request.POST.get("type")
     c_id = request.POST.get("c_id")
-    if activity is not None and type is not None:
+    if activity is not None and tipe is not None:
         if c_id is not None and c_id is not "":
             c = Context.objects.get(id=c_id)
             c.activity_id = activity,
@@ -310,7 +311,7 @@ def ctxThen(request, id):
         else:
             c = Context(
                 wireframe_id=request.session["project"],
-                context_type=type,
+                context_type=tipe,
                 component_id=None,
                 activity_id=activity,
                 context_conjunction=None,
