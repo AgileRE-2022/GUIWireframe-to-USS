@@ -73,7 +73,7 @@ def create(request):
                 print(arrbersih)
                 inspectcomp(arrbersih, w.id)
             else:
-                print('is not plant UML')
+                print('!= plant UML')
 
         return redirect('project_list')
     else:
@@ -179,10 +179,10 @@ def activityAdd(request, id):
     if request.method == 'POST':
         name = request.POST.get("Activity_name")
         component = request.POST.get("Component")
-        if name is not None and component is not None:
+        if name != None and component != None:
             # print("nama Activity "+ name +" dengan komponen yang di pilih : " + component)
             ac = Activity(wireframe_id=id, activity_name=name)
-            if component is not "":
+            if component != "":
                 ac.component_id = int(component)
             ac.save()
             return redirect('project_details', id)
@@ -209,7 +209,7 @@ def activityEdit(request, id, aid):
         act_compo = request.POST.get("Component")
         act.activity_name = act_name
 
-        if act_compo is not "":
+        if act_compo != "":
             act.component_id = act_compo
         else:
             act.component_id = None
@@ -248,9 +248,17 @@ def export(request, id):
 def ctxGiven(request, id):
     statement = request.POST.get("statement")
     component = request.POST.get("component")
+    delete = request.POST.get("delete")
     c_id = request.POST.get("c_id")
-    if statement is not None and component is not None:
-        if c_id is not None and c_id is not "":
+
+    if c_id != None and c_id != "" and delete != None and delete == "true":
+        c = Context.objects.get(id=c_id)
+        print("Delete")
+        c.delete()
+        return redirect('project_details', request.session["project"])
+
+    if statement != None and component != None:
+        if c_id != None and c_id != "":
             c = Context.objects.get(id=c_id)
             if component is "":
                 c.component_id = None
@@ -277,8 +285,8 @@ def ctxWhen(request, id):
     component = request.POST.get("component")
     conjunction = request.POST.get("conjunction")
     c_id = request.POST.get("c_id")
-    if statement is not None and component is not None and conjunction is not None:
-        if c_id is not None and c_id is not "":
+    if statement != None and component != None and conjunction != None:
+        if c_id != None and c_id != "":
             c = Context.objects.get(id=c_id)
             c.component_id = component
             c.context_conjunction = conjunction,
@@ -302,8 +310,8 @@ def ctxThen(request, id):
     activity = request.POST.get("activity")
     type = request.POST.get("type")
     c_id = request.POST.get("c_id")
-    if activity is not None and type is not None:
-        if c_id is not None and c_id is not "":
+    if activity != None and type != None:
+        if c_id != None and c_id != "":
             c = Context.objects.get(id=c_id)
             c.activity_id = activity,
             c.save()
