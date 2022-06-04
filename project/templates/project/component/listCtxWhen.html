@@ -1,0 +1,31 @@
+<ul class="list-group mb-3">
+    <li class="list-group-item list-group-item-primary d-flex justify-content-between align-items-center">
+        <strong class="">When</strong>
+         <button data-bs-toggle="modal"
+                data-bs-target="#ctxWhenModal"
+                id="add-ctx-when"
+                class="ml-2 btn btn-primary">
+            Add
+        </button> 
+    </li>
+    <ul class="list-group">
+        {% for wh in context.when %}
+            <li class="list-group-item  d-flex justify-content-between align-items-center">
+                <div class="">
+                   {{wh.rule.rules_desc}} | {{wh.rule.comp.value}} | {{wh.rule.comp.type_component}} {{wh.context_conjunction}} {{ wh.context_statement }} 
+                </div>
+                <div class="">
+                    <button class="btn btn-warning edit-ctx-given"
+                            data-bs-toggle="modal"
+                            data-bs-target="#ctxWhenModal"
+                            data-id="{{ wh.id }}"
+                            data-statement="{{ wh.context_statement }}"
+                            data-rule="{{ wh.component_id }}">
+                        Edit
+                    </button>
+                    <button class="btn btn-danger">Delete</button>
+                </div>
+            </li>
+        {% endfor %}
+    </ul>
+</ul>

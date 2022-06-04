@@ -45,37 +45,7 @@
                     </ul>
                 </ul>
                 {% comment %} when {% endcomment %}
-                <ul class="list-group mb-3">
-                    <li class="list-group-item list-group-item-primary d-flex justify-content-between align-items-center">
-                        <strong class="">When</strong>
-                         <button data-bs-toggle="modal"
-                                data-bs-target="#ctxWhenModal"
-                                id="add-ctx-when"
-                                class="ml-2 btn btn-primary">
-                            Add
-                        </button> 
-                    </li>
-                    <ul class="list-group">
-                        {% for wh in context.when %}
-                            <li class="list-group-item  d-flex justify-content-between align-items-center">
-                                <div class="">
-                                   {{wh.rule.rules_desc}} | {{wh.rule.comp.value}} | {{wh.rule.comp.type_component}} {{wh.context_conjunction}} {{ wh.context_statement }} 
-                                </div>
-                                <div class="">
-                                    <button class="btn btn-warning edit-ctx-given"
-                                            data-bs-toggle="modal"
-                                            data-bs-target="#ctxGivenModal"
-                                            data-id="{{ g.id }}"
-                                            data-statement="{{ g.context_statement }}"
-                                            data-component="{{ g.component_id }}">
-                                        Edit
-                                    </button>
-                                    <button class="btn btn-danger">Delete</button>
-                                </div>
-                            </li>
-                        {% endfor %}
-                    </ul>
-                </ul>
+                {% include "project/component/listCtxWhen.html" %}
                 <a href="{% url 'project_context' request.session.project %}" class="btn btn-primary mt-3">Halaman Lama Context</a>
             </div>
         </div>
@@ -191,62 +161,12 @@
             </form>
         </div>
     </div>
-
-    <div class="modal fade"id="ctxWhenModal" tabindex="-1" aria-labelledby="ctxWhenModalLabel" aria-hidden="true">
-        <div class="modal-dialog">
-            <form action="{% url 'project_context_when' request.session.project %}"
-                    class="modal-content"
-                    method="post">
-                {% csrf_token %}
-                <div class="modal-header">
-                    <h5 class="modal-title" id="ctxGivenModalLabel">Add When</h5>
-                    <button type="button"
-                            class="btn-close"
-                            data-bs-dismiss="modal"
-                            aria-label="Close"></button>
-                </div>
-                    <div class="modal-body">
-
-                        <select class="form-select given-component mb-3"name="rule"aria-label="Default select example">
-                            <option selected disabled>
-                                Select Rules
-                            </option>
-                            {% for cr in components %}
-                                {% for r in cr.rules  %}
-                                <option value="{{ r.id }}">
-                                    {{ r.rules_desc}} | {{ cr.value }} | {{ cr.type_component }}
-                                </option>
-                                {% endfor %}
-                               
-                            {% endfor %}
-                        </select>
-                        <select class="form-select mb-3" name="conjunction">
-                            <option value="is">
-                                is
-                            </option>
-                            <option value="not">
-                                not
-                            </option>
-                        </select>
-                    <input type="hidden" name="c_id" class="given-c_id">
-                    <input type="text" name="statement" class="form-control given-statement" id="" placeholder="Some Statement">
-                </div> 
-
-                <div class="modal-footer">
-                    <button type="button" class="btn btn-danger" data-bs-dismiss="modal">
-                        Cancel
-                    </button>
-                    <button type="submit" class="btn btn-primary">
-                        Save
-                    </button>
-                </div>
-            </form>
-    </div>
-</div>
+    {% include 'project/component/modalCtxWhen.html' %}
+   
 {% endblock modal %}
 {% block js %}
     <script>
-    const givenModal = document.querySelector('#ctxGivenModal')
+    const givenModal = document.querySelector('#ctxGivenModal') //get id
     document.querySelectorAll('.edit-ctx-given').forEach(btn => {
         btn.addEventListener('click', () => {
             givenModal.querySelector('.modal-title').innerHTML = "Edit Given"
@@ -271,10 +191,11 @@
         })
     })
     document.querySelector('#add-ctx-given').addEventListener('click', () => {
-        givenModal.querySelector('.modal-title').innerHTML = "Add Given"
-        givenModal.querySelector('.given-c_id').value = null
-        givenModal.querySelector('.given-statement').value = null
+        givenModal.querySelector('.modal-title').innerHTML = "Add Given" //title
+        givenModal.querySelector('.given-c_id').value = null //id yang di edit 
+        givenModal.querySelector('.given-statement').value = null //
         givenModal.querySelector('select').selectedIndex = 0
     })
     </script>
+    {% include 'project/component/jsCtxWhen.html' %}
 {% endblock js %}
