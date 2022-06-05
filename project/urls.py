@@ -27,6 +27,7 @@ urlpatterns = [
             path('given', views.ctxGiven, name="project_context_given"),
             path('when', views.ctxWhen, name="project_context_when"),
             path('then', views.ctxThen, name="project_context_then"),
+            path('athen', views.ctxAThen, name="project_context_athen"),
         ])),
     ])),
     path('logout', views.logout, name="project_logout")

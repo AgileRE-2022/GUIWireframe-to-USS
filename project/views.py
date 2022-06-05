@@ -97,6 +97,7 @@ def details(request, id):
 
     ctx = {}
     ctx["given"] = Context.objects.filter(context_type="given")
+    ctx["athen"] = Context.objects.filter(context_type="alt-then")
 
     args["context"] = ctx
     return TemplateResponse(request, template, args)
@@ -259,6 +260,8 @@ def ctxGiven(request, id):
             c.context_statement = statement
             c.save()
         else:
+            if component == "":
+                component = None
             c = Context(
                 wireframe_id=request.session["project"],
                 context_type="given",
@@ -315,6 +318,25 @@ def ctxThen(request, id):
                 activity_id=activity,
                 context_conjunction=None,
                 context_statement=None
+            )
+            c.save()
+    return redirect('project_details', request.session["project"])
+
+@csrf_protect
+def ctxAThen(request, id):
+    activity = request.POST.get("activity")
+    type = request.POST.get("type")
+    c_id = request.POST.get("c_id")
+    if activity is not None and type is not None:
+        if c_id is not None and c_id is not "":
+            c = Context.objects.get(id=c_id)
+            c.activity_id = activity,
+            c.save()
+        else:
+            c = Context(
+                wireframe_id=request.session["project"],
+                context_type=type,
+                activity_id=activity,
             )
             c.save()
     return redirect('project_details', request.session["project"])
