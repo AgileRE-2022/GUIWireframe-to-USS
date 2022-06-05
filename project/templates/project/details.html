@@ -10,12 +10,13 @@
         </div>
         <div class="col-12 col-lg-6 mb-2 mt-3">
             <div class="h3">Context</div>
+            {% comment %} Context {% endcomment %}
             <div class="">
                 <ul class="list-group mb-3">
                     <li class="list-group-item list-group-item-primary d-flex justify-content-between align-items-center">
                         <strong class="">Given</strong>
                         <button data-bs-toggle="modal"
-                                data-bs-target="#ctxGivenModal"s
+                                data-bs-target="#ctxGivenModal"
                                 id="add-ctx-given"
                                 class="ml-2 btn btn-primary">
                             Add
@@ -29,11 +30,12 @@
                                     {% if g.component_id != None %}<strong>for</strong> {{ g.comp.value }} ({{ g.comp.type_component }}){% endif %}
                                 </div>
                                 <div class="">
+                                    {% comment %} EDIT {% endcomment %}
                                     <button class="btn btn-warning edit-ctx-given"
-                                            data-bs-toggle="modal"
-                                            data-bs-target="#ctxGivenModal"
+                                            data-bs-toggle="modal" {% comment %} Manggil modal {% endcomment %}
+                                            data-bs-target="#ctxGivenModal" {% comment %} DOM {% endcomment %}
                                             data-id="{{ g.id }}"
-                                            data-statement="{{ g.context_statement }}"
+                                            data-statement="{{ g.context_statement }}" {% comment %} Butuhnya activity {% endcomment %}
                                             data-component="{{ g.component_id }}">
                                         Edit
                                     </button>
@@ -44,7 +46,7 @@
                     </ul>
                 </ul>
             </div>
-
+            {% comment %} Then {% endcomment %}
             <div class="">
                 <ul class="list-group mb-3">
                     <li class="list-group-item list-group-item-primary d-flex justify-content-between align-items-center">
@@ -67,11 +69,10 @@
                                     {% endif %}
                                 </div>
                                 <div class="">
-                                    <button class="btn btn-warning edit-ctx-given"
+                                    <button class="btn btn-warning edit-ctx-then"
                                             data-bs-toggle="modal"
                                             data-bs-target="#ctxThenModal"
                                             data-id="{{ t.id }}"
-                                            data-statement="{{ t.context_statement }}"
                                             data-activity="{{ t.activity_id }}">
                                         Edit
                                     </button>
@@ -219,16 +220,13 @@
                             aria-label="Close"></button>
                 </div>
                 <div class="modal-body">
-                    <input type="hidden" name="c_id" class="given-c_id">
-                    <input type="hidden" name="type" class="given-c_id" value="then">
-                    <select class="form-select given-component"
+                    <input type="hidden" name="c_id" class="then-c_id">
+                    <input type="hidden" name="type" class="then-c_id" value="then">
+                    <select class="form-select then-component"
                            name="activity"
                            aria-label="Default select example">
                        <option selected disabled>
                            Select Component
-                       </option>
-                       <option value="">
-                           no component
                        </option>
                        {% for a in activities %}
                            <option value="{{ a.id }}">
@@ -257,12 +255,13 @@
 
 {% block js %}
     <script>
-    const givenModal = document.querySelector('#ctxGivenModal')
+    const givenModal = document.querySelector('#ctxGivenModal') // Id modal
+    // nampilin di edit
     document.querySelectorAll('.edit-ctx-given').forEach(btn => {
         btn.addEventListener('click', () => {
             givenModal.querySelector('.modal-title').innerHTML = "Edit Given"
             givenModal.querySelector('.given-c_id').value = btn.dataset.id
-            givenModal.querySelector('.given-statement').value = btn.dataset.statement
+            givenModal.querySelector('.given-statement').value = btn.dataset.statement //dirubah
             var selectedIndex = 0
             if(btn.dataset.component == "None"){
                 selectedIndex = 1
@@ -281,6 +280,7 @@
             givenModal.querySelector('select').selectedIndex = selectedIndex
         })
     })
+    //reset 
     document.querySelector('#add-ctx-given').addEventListener('click', () => {
         givenModal.querySelector('.modal-title').innerHTML = "Add Given"
         givenModal.querySelector('.given-c_id').value = null
@@ -288,4 +288,38 @@
         givenModal.querySelector('select').selectedIndex = 0
     })
     </script>
+
+    {% comment %} JS Then {% endcomment %}
+    <script>
+        const thenModal = document.querySelector('#ctxThenModal') // Id modal
+        // nampilin di edit
+        document.querySelectorAll('.edit-ctx-then').forEach(btn => {
+            btn.addEventListener('click', () => {
+                thenModal.querySelector('.modal-title').innerHTML = "Edit Then"
+                thenModal.querySelector('.then-c_id').value = btn.dataset.id
+                var selectedIndex = 0
+                if(btn.dataset.activity == "None"){
+                    selectedIndex = 1
+                }else{
+                    try {
+                        thenModal.querySelectorAll('option').forEach(e => {
+                            if (e.value == btn.dataset.activity) {
+                                throw 'Break'
+                            }
+                            selectedIndex++
+                        })
+                    } catch (e) {
+                        if (e !== 'Break') throw e
+                    }
+                }
+                thenModal.querySelector('select').selectedIndex = selectedIndex
+            })
+        })
+        //reset 
+        document.querySelector('#add-ctx-then').addEventListener('click', () => {
+            thenModal.querySelector('.modal-title').innerHTML = "Add Then"
+            thenModal.querySelector('.then-c_id').value = null
+            thenModal.querySelector('select').selectedIndex = 0
+        })
+        </script>
 {% endblock js %}

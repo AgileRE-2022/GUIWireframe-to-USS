@@ -260,6 +260,8 @@ def ctxGiven(request, id):
             c.context_statement = statement
             c.save()
         else:
+            if component == "":
+                component = None
             c = Context(
                 wireframe_id=request.session["project"],
                 context_type="given",
@@ -306,7 +308,7 @@ def ctxThen(request, id):
     if activity is not None and tipe is not None:
         if c_id is not None and c_id is not "":
             c = Context.objects.get(id=c_id)
-            c.activity_id = activity,
+            c.activity_id = activity
             c.save()
         else:
             c = Context(
