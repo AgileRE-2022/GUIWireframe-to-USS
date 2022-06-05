@@ -1,0 +1,37 @@
+<div class="">
+    <ul class="list-group mb-3">
+        <li class="list-group-item list-group-item-primary d-flex justify-content-between align-items-center">
+            <strong class="">Alt-Then</strong>
+            <button data-bs-toggle="modal"
+                    data-bs-target="#ctxAThenModal"
+                    id="add-ctx-athen"
+                    class="ml-2 btn btn-primary">
+                Add
+            </button>
+        </li>
+        <ul class="list-group">
+            {% for t in context.athen %}
+                <li class="list-group-item  d-flex justify-content-between align-items-center">
+                    <div class="">
+                        {{ t.activity.activity_name }} 
+                        {% if t.activity.component_id is not None %} |
+                            {{ t.activity.comp.value }} —
+                            {{ t.activity.comp.type_component }}
+                        {% endif %}
+                    </div>
+                    <div class="">
+                        <button class="btn btn-warning edit-ctx-athen"
+                                data-bs-toggle="modal"
+                                data-bs-target="#ctxAThenModal"
+                                data-id="{{ t.id }}"
+                                data-statement="{{ t.context_statement }}"
+                                data-activity="{{ t.activity_id }}">
+                            Edit
+                        </button>
+                        <button class="btn btn-danger">Delete</button>
+                    </div>
+                </li>
+            {% endfor %}
+        </ul>
+    </ul>
+</div>
