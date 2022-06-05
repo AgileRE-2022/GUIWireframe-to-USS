@@ -7,21 +7,23 @@
             whenModal.querySelector('.when-c_id').value = btn.dataset.id
             whenModal.querySelector('.when-statement').value = btn.dataset.statement
             var selectedIndex = 0
-            if(btn.dataset.component == "None"){
-                selectedIndex = 1
-            }else{
-                try {
-                    whenModal.querySelectorAll('option').forEach(e => {
-                        if (e.value == btn.dataset.component) {
-                            throw 'Break'
-                        }
-                        selectedIndex++
-                    })
-                } catch (e) {
-                    if (e !== 'Break') throw e
-                }
+            try {
+                whenModal.querySelectorAll('select.when-rule option').forEach(e => {
+                    if (e.value == btn.dataset.rule) {
+                        throw 'Break'
+                    }
+                    selectedIndex++
+                })
+            } catch (e) {
+                if (e !== 'Break') throw e
             }
-            whenModal.querySelector('select').selectedIndex = selectedIndex
+            whenModal.querySelector('select.when-rule').selectedIndex = selectedIndex
+
+            if (btn.dataset.conjunction == "is") {
+                whenModal.querySelector('select.when-conjunction').selectedIndex = 0
+            } else {
+                whenModal.querySelector('select.when-conjunction').selectedIndex = 1
+            }
         })
     })
     //melakukan reset value yang sebelumnya dimanipulasi ketika memencet tombol Add

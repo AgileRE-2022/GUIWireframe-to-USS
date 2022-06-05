@@ -280,10 +280,10 @@ def ctxWhen(request, id):
     rule = request.POST.get("rule")
     conjunction = request.POST.get("conjunction")
     c_id = request.POST.get("c_id")
-    if statement is not None and rule is not None and conjunction is not None:
-        if c_id is not None and c_id is not "":
+    if statement != None and rule != None and conjunction != None:
+        if c_id != None and c_id != "":
             c = Context.objects.get(id=c_id)
-            # c.component_id = rule
+            c.rule_id = rule
             c.context_conjunction = conjunction
             c.context_statement = statement
             c.save()
