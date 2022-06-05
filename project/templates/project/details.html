@@ -37,13 +37,19 @@
                                             data-component="{{ g.component_id }}">
                                         Edit
                                     </button>
-                                    <button class="btn btn-danger">Delete</button>
+                                    <button class="btn btn-danger delete-ctx-given"
+                                            data-id="{{ g.id }}"
+                                            data-statement="{{ g.context_statement }}"
+                                            data-component="{{ g.component_id }}">
+                                        Delete
+                                    </button>
                                 </div>
                             </li>
                         {% endfor %}
                     </ul>
                 </ul>
-                <a href="{% url 'project_context' request.session.project %}" class="btn btn-primary mt-3">Halaman Lama Context</a>
+                <a href="{% url 'project_context' request.session.project %}"
+                   class="btn btn-primary mt-3">Halaman Lama Context</a>
             </div>
         </div>
         {% comment %} COMPONENT and RULES {% endcomment %}
@@ -123,14 +129,13 @@
                 </div>
                 <div class="modal-body">
                     <input type="hidden" name="c_id" class="given-c_id">
+                    <input type="hidden" name="delete" class="given-delete" value="false">
                     <input type="text"
                            name="statement"
                            class="form-control given-statement"
                            id=""
                            placeholder="Some Statement">
-                    <div class="m-3">
-                        for
-                    </div>
+                    <div class="m-3">for</div>
                     <select class="form-select given-component"
                             name="component"
                             aria-label="Default select example">
@@ -151,7 +156,7 @@
                     <button type="button" class="btn btn-danger" data-bs-dismiss="modal">
                         Cancel
                     </button>
-                    <button type="submit" class="btn btn-primary">
+                    <button type="submit" class="btn btn-primary given-submit-btn">
                         Save
                     </button>
                 </div>
@@ -183,6 +188,13 @@
                 }
             }
             givenModal.querySelector('select').selectedIndex = selectedIndex
+        })
+    })
+    document.querySelectorAll('.delete-ctx-given').forEach(btn => {
+        btn.addEventListener('click', () => {
+            givenModal.querySelector('.given-c_id').value = btn.dataset.id
+            givenModal.querySelector('.given-delete').value = "true"
+            givenModal.querySelector('.given-submit-btn').click()
         })
     })
     document.querySelector('#add-ctx-given').addEventListener('click', () => {
