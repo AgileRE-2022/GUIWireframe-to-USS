@@ -304,7 +304,15 @@ def ctxWhen(request, id):
 def ctxThen(request, id):
     activity = request.POST.get("activity")
     tipe = request.POST.get("type")
+    delete = request.POST.get("delete")
     c_id = request.POST.get("c_id")
+
+    if c_id != None and c_id != "" and delete != None and delete == "true":
+        c = Context.objects.get(id=c_id)
+        print("Delete")
+        c.delete()
+        return redirect('project_details', request.session["project"])
+    
     if activity is not None and tipe is not None:
         if c_id is not None and c_id is not "":
             c = Context.objects.get(id=c_id)
