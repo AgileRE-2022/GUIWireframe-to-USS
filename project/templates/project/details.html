@@ -11,6 +11,7 @@
         <div class="col-12 col-lg-6 mb-2 mt-3">
             <div class="h3">Context</div>
             <div class="">
+                {% comment %} given {% endcomment %}
                 <ul class="list-group mb-3">
                     <li class="list-group-item list-group-item-primary d-flex justify-content-between align-items-center">
                         <strong class="">Given</strong>
@@ -44,6 +45,9 @@
                     </ul>
                 </ul>
             </div>
+            {% comment %} when {% endcomment %}
+            {% include "project/component/listCtxWhen.html" %}
+            {% comment %} alt-then {% endcomment %}
             <div class="">
                 <ul class="list-group mb-3">
                     <li class="list-group-item list-group-item-primary d-flex justify-content-between align-items-center">
@@ -80,8 +84,8 @@
                         {% endfor %}
                     </ul>
                 </ul>
-                <a href="{% url 'project_context' request.session.project %}" class="btn btn-primary mt-3">Halaman Lama Context</a>
             </div>
+            <a href="{% url 'project_context' request.session.project %}" class="btn btn-primary mt-3">Halaman Lama Context</a>
         </div>
         {% comment %} COMPONENT and RULES {% endcomment %}
         <div class="col-lg-6 col-12 mt-3 mb-2">
@@ -178,10 +182,10 @@
                             no component
                         </option>
                         {% for c in components %}
-                            <option value="{{ c.id }}">
-                                {{ c.value }} | {{ c.type_component }}
-                            </option>
-                        {% endfor %}
+                        <option value="{{ c.id }}">
+                            {{ c.value }} | {{ c.type_component }}
+                        </option>
+                    {% endfor %}
                     </select>
                 </div>
                 <div class="modal-footer">
@@ -246,10 +250,13 @@
             </form>
         </div>
     </div>
+    {% comment %} when {% endcomment %}
+    {% include 'project/component/modalCtxWhen.html' %}
+   
 {% endblock modal %}
 {% block js %}
     <script>
-    const givenModal = document.querySelector('#ctxGivenModal')
+    const givenModal = document.querySelector('#ctxGivenModal') //get id
     document.querySelectorAll('.edit-ctx-given').forEach(btn => {
         btn.addEventListener('click', () => {
             givenModal.querySelector('.modal-title').innerHTML = "Edit Given"
@@ -274,10 +281,11 @@
         })
     })
     document.querySelector('#add-ctx-given').addEventListener('click', () => {
-        givenModal.querySelector('.modal-title').innerHTML = "Add Given"
-        givenModal.querySelector('.given-c_id').value = null
-        givenModal.querySelector('.given-statement').value = null
+        givenModal.querySelector('.modal-title').innerHTML = "Add Given" //title
+        givenModal.querySelector('.given-c_id').value = null //id yang di edit 
+        givenModal.querySelector('.given-statement').value = null //
         givenModal.querySelector('select').selectedIndex = 0
     })
     </script>
+    {% include 'project/component/jsCtxWhen.html' %}
 {% endblock js %}
