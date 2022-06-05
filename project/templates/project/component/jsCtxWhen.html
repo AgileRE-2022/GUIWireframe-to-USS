@@ -1,3 +1,34 @@
+{% comment %} belum seleasai {% endcomment %}
 <script>
-
+    const whenModal = document.querySelector('#ctxWhenModal') //get id
+    document.querySelectorAll('.edit-ctx-when').forEach(btn => {
+        btn.addEventListener('click', () => {
+            whenModal.querySelector('.modal-title').innerHTML = "Edit When"
+            whenModal.querySelector('.when-c_id').value = btn.dataset.id
+            whenModal.querySelector('.when-statement').value = btn.dataset.statement
+            var selectedIndex = 0
+            if(btn.dataset.component == "None"){
+                selectedIndex = 1
+            }else{
+                try {
+                    whenModal.querySelectorAll('option').forEach(e => {
+                        if (e.value == btn.dataset.component) {
+                            throw 'Break'
+                        }
+                        selectedIndex++
+                    })
+                } catch (e) {
+                    if (e !== 'Break') throw e
+                }
+            }
+            whenModal.querySelector('select').selectedIndex = selectedIndex
+        })
+    })
+    //melakukan reset value yang sebelumnya dimanipulasi ketika memencet tombol Add
+    document.querySelector('#add-ctx-when').addEventListener('click', () => {
+        whenModal.querySelector('.modal-title').innerHTML = "Add When" //title
+        whenModal.querySelector('.when-r_id').value = null //id yang di edit 
+        whenModal.querySelector('.when-statement').value = null //edit statement
+        whenModal.querySelector('select').selectedIndex = 0 //sek bingung
+    })
 </script>

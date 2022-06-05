@@ -5,7 +5,7 @@
                 method="post">
             {% csrf_token %}
             <div class="modal-header">
-                <h5 class="modal-title" id="ctxGivenModalLabel">Add When</h5>
+                <h5 class="modal-title" id="ctxWhenModalLabel">Add When</h5>
                 <button type="button"
                         class="btn-close"
                         data-bs-dismiss="modal"
@@ -13,7 +13,7 @@
             </div>
                 <div class="modal-body">
 
-                    <select class="form-select given-component mb-3"name="rule"aria-label="Default select example">
+                    <select class="form-select when-rule mb-3"name="rule"aria-label="Default select example">
                         <option selected disabled>
                             Select Rules
                         </option>
@@ -34,8 +34,8 @@
                             not
                         </option>
                     </select>
-                <input type="hidden" name="c_id" class="given-c_id">
-                <input type="text" name="statement" class="form-control given-statement" id="" placeholder="Some Statement">
+                <input type="hidden" name="c_id" class="when-c_id">
+                <input type="text" name="statement" class="form-control when-statement" id="" placeholder="Some Statement">
             </div> 
 
             <div class="modal-footer">

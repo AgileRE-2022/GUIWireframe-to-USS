@@ -15,12 +15,13 @@
                    {{wh.rule.rules_desc}} | {{wh.rule.comp.value}} | {{wh.rule.comp.type_component}} {{wh.context_conjunction}} {{ wh.context_statement }} 
                 </div>
                 <div class="">
-                    <button class="btn btn-warning edit-ctx-given"
+                    <button class="btn btn-warning edit-ctx-when"
                             data-bs-toggle="modal"
                             data-bs-target="#ctxWhenModal"
                             data-id="{{ wh.id }}"
-                            data-statement="{{ wh.context_statement }}"
-                            data-rule="{{ wh.component_id }}">
+                            data-rule="{{ wh.rule_id }}"
+                            data-conjunction="{{wh.context_conjunction }}"
+                            data-statement="{{ wh.context_statement }}">
                         Edit
                     </button>
                     <button class="btn btn-danger">Delete</button>
