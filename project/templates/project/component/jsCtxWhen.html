@@ -29,8 +29,16 @@
     //melakukan reset value yang sebelumnya dimanipulasi ketika memencet tombol Add
     document.querySelector('#add-ctx-when').addEventListener('click', () => {
         whenModal.querySelector('.modal-title').innerHTML = "Add When" //title
-        whenModal.querySelector('.when-r_id').value = null //id yang di edit 
+        whenModal.querySelector('.when-c_id').value = null //id yang di edit 
         whenModal.querySelector('.when-statement').value = null //edit statement
         whenModal.querySelector('select').selectedIndex = 0 //sek bingung
+    })
+
+    document.querySelectorAll('.delete-ctx-when').forEach(btn => {
+        btn.addEventListener('click', () => {
+            whenModal.querySelector('.when-c_id').value = btn.dataset.id //id yang di edit 
+            whenModal.querySelector('.when-delete').value = "true" //id yang di edit 
+            whenModal.querySelector('#when-submit-btn').click()
+        })
     })
 </script>

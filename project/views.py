@@ -280,6 +280,14 @@ def ctxWhen(request, id):
     rule = request.POST.get("rule")
     conjunction = request.POST.get("conjunction")
     c_id = request.POST.get("c_id")
+    delete = request.POST.get("delete")
+
+    if c_id != None and c_id != "" and delete != None and delete == "true":
+        c = Context.objects.get(id=c_id)
+        c.delete()
+        return redirect('project_details', request.session["project"])
+
+
     if statement != None and rule != None and conjunction != None:
         if c_id != None and c_id != "":
             c = Context.objects.get(id=c_id)
