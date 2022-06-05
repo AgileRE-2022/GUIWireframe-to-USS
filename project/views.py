@@ -288,7 +288,6 @@ def ctxWhen(request, id):
         c.delete()
         return redirect('project_details', request.session["project"])
 
-
     if statement != None and rule != None and conjunction != None:
         if c_id != None and c_id != "":
             c = Context.objects.get(id=c_id)
@@ -300,7 +299,7 @@ def ctxWhen(request, id):
             c = Context(
                 wireframe_id=request.session["project"],
                 context_type="when",
-                component_id= None,
+                component_id=None,
                 rule_id=rule,
                 activity_id=None,
                 context_conjunction=conjunction,
@@ -332,20 +331,28 @@ def ctxThen(request, id):
             c.save()
     return redirect('project_details', request.session["project"])
 
+
 @csrf_protect
 def ctxAThen(request, id):
     activity = request.POST.get("activity")
     type = request.POST.get("type")
     c_id = request.POST.get("c_id")
-    if activity is not None and type is not None:
-        if c_id is not None and c_id is not "":
+    delete = request.POST.get("delete")
+
+    if c_id != None and delete != None and delete == "true":
+        c = Context.objects.get(id=c_id)
+        c.delete()
+        return redirect('project_details', request.session["project"])
+
+    if activity != None and type != None:
+        if c_id != None and c_id != "":
             c = Context.objects.get(id=c_id)
-            c.activity_id = activity,
+            c.activity_id = activity
             c.save()
         else:
             c = Context(
                 wireframe_id=request.session["project"],
-                context_type=type,
+                context_type=type,\
                 activity_id=activity,
             )
             c.save()

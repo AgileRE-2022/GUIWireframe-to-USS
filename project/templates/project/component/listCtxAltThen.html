@@ -13,7 +13,7 @@
             {% for t in context.athen %}
                 <li class="list-group-item  d-flex justify-content-between align-items-center">
                     <div class="">
-                        {{ t.activity.activity_name }} 
+                        {{ t.activity.activity_name }}
                         {% if t.activity.component_id is not None %} |
                             {{ t.activity.comp.value }} —
                             {{ t.activity.comp.type_component }}
@@ -24,11 +24,10 @@
                                 data-bs-toggle="modal"
                                 data-bs-target="#ctxAThenModal"
                                 data-id="{{ t.id }}"
-                                data-statement="{{ t.context_statement }}"
                                 data-activity="{{ t.activity_id }}">
                             Edit
                         </button>
-                        <button class="btn btn-danger">Delete</button>
+                        <button class="btn btn-danger delete-ctx-athen" data-id="{{ t.id }}">Delete</button>
                     </div>
                 </li>
             {% endfor %}
