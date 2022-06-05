@@ -352,7 +352,7 @@ def ctxAThen(request, id):
         else:
             c = Context(
                 wireframe_id=request.session["project"],
-                context_type=type,\
+                context_type=type,
                 activity_id=activity,
             )
             c.save()
