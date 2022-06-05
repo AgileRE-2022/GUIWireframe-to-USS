@@ -267,6 +267,8 @@ def ctxGiven(request, id):
             c.context_statement = statement
             c.save()
         else:
+            if component == "":
+                component = None
             c = Context(
                 wireframe_id=request.session["project"],
                 context_type="given",
