@@ -1,0 +1,36 @@
+{% comment %} belum seleasai {% endcomment %}
+<script>
+    const altThenModal = document.querySelector('#ctxAThenModal') //get id
+    document.querySelectorAll('.edit-ctx-athen').forEach(btn => {
+        btn.addEventListener('click', () => {
+            altThenModal.querySelector('.modal-title').innerHTML = "Edit alt-then"
+            altThenModal.querySelector('.athen-c_id').value = btn.dataset.id
+            var selectedIndex = 0
+            try {
+                altThenModal.querySelectorAll('select.athen-activity option').forEach(e => {
+                    if (e.value == btn.dataset.activity) {
+                        throw 'Break'
+                    }
+                    selectedIndex++
+                })
+            } catch (e) {
+                if (e !== 'Break') throw e
+            }
+            altThenModal.querySelector('select.athen-activity').selectedIndex = selectedIndex
+        })
+    })
+    //melakukan reset value yang sebelumnya dimanipulasi ketika memencet tombol Add
+    document.querySelector('#add-ctx-athen').addEventListener('click', () => {
+        altThenModal.querySelector('.modal-title').innerHTML = "Add athen" //title
+        altThenModal.querySelector('.athen-c_id').value = null //id yang di edit 
+        altThenModal.querySelector('select.athen-activity').selectedIndex = 0 //sek bingung
+    })
+
+    document.querySelectorAll('.delete-ctx-athen').forEach(btn => {
+        btn.addEventListener('click', () => {
+            altThenModal.querySelector('.athen-c_id').value = btn.dataset.id //id yang di edit 
+            altThenModal.querySelector('.athen-delete').value = "true" //id yang di edit 
+            altThenModal.querySelector('#athen-submit-btn').click()
+        })
+    })
+</script>

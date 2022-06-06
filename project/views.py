@@ -94,10 +94,12 @@ def details(request, id):
     args['wireframe'] = Wireframe.objects.get(id=id)
     args['components'] = Component.objects.filter(wireframe_id=id)
     args['activities'] = Activity.objects.filter(wireframe_id=id)
+    #args['rules'] = Rules.objects.filter(wireframe_id=id)
 
     ctx = {}
     ctx["given"] = Context.objects.filter(context_type="given")
-
+    ctx["athen"] = Context.objects.filter(context_type="alt-then")
+    ctx["when"] = Context.objects.filter(context_type="when")
     args["context"] = ctx
     return TemplateResponse(request, template, args)
 
@@ -284,21 +286,29 @@ def ctxGiven(request, id):
 @csrf_protect
 def ctxWhen(request, id):
     statement = request.POST.get("statement")
-    component = request.POST.get("component")
+    rule = request.POST.get("rule")
     conjunction = request.POST.get("conjunction")
     c_id = request.POST.get("c_id")
-    if statement != None and component != None and conjunction != None:
+    delete = request.POST.get("delete")
+
+    if c_id != None and c_id != "" and delete != None and delete == "true":
+        c = Context.objects.get(id=c_id)
+        c.delete()
+        return redirect('project_details', request.session["project"])
+
+    if statement != None and rule != None and conjunction != None:
         if c_id != None and c_id != "":
             c = Context.objects.get(id=c_id)
-            c.component_id = component
-            c.context_conjunction = conjunction,
+            c.rule_id = rule
+            c.context_conjunction = conjunction
             c.context_statement = statement
             c.save()
         else:
             c = Context(
                 wireframe_id=request.session["project"],
                 context_type="when",
-                component_id=component,
+                component_id=None,
+                rule_id=rule,
                 activity_id=None,
                 context_conjunction=conjunction,
                 context_statement=statement
@@ -325,6 +335,33 @@ def ctxThen(request, id):
                 activity_id=activity,
                 context_conjunction=None,
                 context_statement=None
+            )
+            c.save()
+    return redirect('project_details', request.session["project"])
+
+
+@csrf_protect
+def ctxAThen(request, id):
+    activity = request.POST.get("activity")
+    type = request.POST.get("type")
+    c_id = request.POST.get("c_id")
+    delete = request.POST.get("delete")
+
+    if c_id != None and delete != None and delete == "true":
+        c = Context.objects.get(id=c_id)
+        c.delete()
+        return redirect('project_details', request.session["project"])
+
+    if activity != None and type != None:
+        if c_id != None and c_id != "":
+            c = Context.objects.get(id=c_id)
+            c.activity_id = activity
+            c.save()
+        else:
+            c = Context(
+                wireframe_id=request.session["project"],
+                context_type=type,
+                activity_id=activity,
             )
             c.save()
     return redirect('project_details', request.session["project"])

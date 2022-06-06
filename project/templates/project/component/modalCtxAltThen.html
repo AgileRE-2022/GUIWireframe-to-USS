@@ -1,0 +1,51 @@
+<div class="modal fade"
+         id="ctxAThenModal"
+         tabindex="-1"
+         aria-labelledby="ctxAThenModalLabel"
+         aria-hidden="true">
+        <div class="modal-dialog">
+            <form action="{% url 'project_context_athen' request.session.project %}"
+                  class="modal-content"
+                  method="post">
+                {% csrf_token %}
+                <div class="modal-header">
+                    <h5 class="modal-title" id="ctxAThenModalLabel">Add Alt-Then</h5>
+                    <button type="button"
+                            class="btn-close"
+                            data-bs-dismiss="modal"
+                            aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <input type="hidden" name="c_id" class="athen-c_id">
+                    <input type="hidden" name="delete" class="athen-delete">
+                    <input type="hidden" name="type" class="" value="alt-then">
+                    <select class="form-select athen-activity"
+                           name="activity"
+                           aria-label="Default select example">
+                       <option selected disabled>
+                           Select Activity
+                       </option>
+                       {% comment %} <option value="">
+                           No Activity
+                       </option> {% endcomment %}
+                       {% for a in activities %}
+                           <option value="{{ a.id }}">
+                            {{ a.activity_name }} | 
+                            {% if a.component_id is not None %}
+                                {{ a.comp.value }} (Type : {{ a.comp.type_component }})
+                            {% endif %}
+                           </option>
+                       {% endfor %}
+                   </select>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-danger" data-bs-dismiss="modal">
+                        Cancel
+                    </button>
+                    <button type="submit" class="btn btn-primary" id="athen-submit-btn">
+                        Save
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
