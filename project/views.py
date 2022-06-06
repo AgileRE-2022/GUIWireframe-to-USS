@@ -100,6 +100,8 @@ def details(request, id):
     ctx["given"] = Context.objects.filter(context_type="given")
     ctx["athen"] = Context.objects.filter(context_type="alt-then")
     ctx["when"] = Context.objects.filter(context_type="when")
+    ctx["then"] = Context.objects.filter(context_type="then")
+
     args["context"] = ctx
     return TemplateResponse(request, template, args)
 
@@ -320,17 +322,25 @@ def ctxWhen(request, id):
 @csrf_protect
 def ctxThen(request, id):
     activity = request.POST.get("activity")
-    type = request.POST.get("type")
+    tipe = request.POST.get("type")
+    delete = request.POST.get("delete")
     c_id = request.POST.get("c_id")
-    if activity != None and type != None:
-        if c_id != None and c_id != "":
+
+    if c_id != None and c_id != "" and delete != None and delete == "true":
+        c = Context.objects.get(id=c_id)
+        print("Delete")
+        c.delete()
+        return redirect('project_details', request.session["project"])
+    
+    if activity is not None and tipe is not None:
+        if c_id is not None and c_id is not "":
             c = Context.objects.get(id=c_id)
-            c.activity_id = activity,
+            c.activity_id = activity
             c.save()
         else:
             c = Context(
                 wireframe_id=request.session["project"],
-                context_type=type,
+                context_type=tipe,
                 component_id=None,
                 activity_id=activity,
                 context_conjunction=None,

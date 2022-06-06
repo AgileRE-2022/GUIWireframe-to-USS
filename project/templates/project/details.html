@@ -10,6 +10,7 @@
         </div>
         <div class="col-12 col-lg-6 mb-2 mt-3">
             <div class="h3">Context</div>
+            {% comment %} Context {% endcomment %}
             <div class="">
                 {% comment %} given {% endcomment %}
                 <ul class="list-group mb-3">
@@ -30,11 +31,12 @@
                                     {% if g.component_id != None %}<strong>for</strong> {{ g.comp.value }} ({{ g.comp.type_component }}){% endif %}
                                 </div>
                                 <div class="">
+                                    {% comment %} EDIT {% endcomment %}
                                     <button class="btn btn-warning edit-ctx-given"
-                                            data-bs-toggle="modal"
-                                            data-bs-target="#ctxGivenModal"
+                                            data-bs-toggle="modal" {% comment %} Manggil modal {% endcomment %}
+                                            data-bs-target="#ctxGivenModal" {% comment %} DOM {% endcomment %}
                                             data-id="{{ g.id }}"
-                                            data-statement="{{ g.context_statement }}"
+                                            data-statement="{{ g.context_statement }}" {% comment %} Butuhnya activity {% endcomment %}
                                             data-component="{{ g.component_id }}">
                                         Edit
                                     </button>
@@ -50,12 +52,55 @@
                     </ul>
                 </ul>
             </div>
+            {% comment %} Then {% endcomment %}
+           
             {% comment %} when {% endcomment %}
             {% include "project/component/listCtxWhen.html" %}
+            {% comment %} then {% endcomment %}
+            <div class="">
+                <ul class="list-group mb-3">
+                    <li class="list-group-item list-group-item-primary d-flex justify-content-between align-items-center">
+                        <strong class="">Then</strong>
+                        <button data-bs-toggle="modal"
+                                data-bs-target="#ctxThenModal"
+                                id="add-ctx-then"
+                                class="ml-2 btn btn-primary">
+                            Add
+                        </button>
+                    </li>
+                    <ul class="list-group">
+                        {% for t in context.then %}
+                            <li class="list-group-item  d-flex justify-content-between align-items-center">
+                                <div class="">
+                                    {{ t.activity.activity_name }} 
+                                    {% if t.activity.component_id is not None %} |
+                                    {{ t.activity.comp.value }} —
+                                    {{ t.activity.comp.type_component }}
+                                    {% endif %}
+                                </div>
+                                <div class="">
+                                    <button class="btn btn-warning edit-ctx-then"
+                                            data-bs-toggle="modal"
+                                            data-bs-target="#ctxThenModal"
+                                            data-id="{{ t.id }}"
+                                            data-activity="{{ t.activity_id }}">
+                                        Edit
+                                    </button>
+                                    <button class="btn btn-danger delete-ctx-then"
+                                            data-id="{{ t.id }}"
+                                            data-activity="{{ t.activity_id }}">
+                                        Delete</button>
+                                </div>
+                            </li>
+                        {% endfor %}
+                    </ul>
+                </ul>
+            </div>
             {% comment %} alt-then {% endcomment %}
             {% include "project/component/listCtxAltThen.html" %}
             <a href="{% url 'project_context' request.session.project %}" class="btn btn-primary mt-3">Halaman Lama Context</a>
         </div>
+
         {% comment %} COMPONENT and RULES {% endcomment %}
         <div class="col-lg-6 col-12 mt-3 mb-2">
             <div class="h3 mb-3">List Component and Rules</div>
@@ -113,7 +158,9 @@
         </div>
     </div>
 {% endblock content %}
+
 {% block modal %}
+    {% comment %} Given {% endcomment %}
     <div class="modal fade"
          id="ctxGivenModal"
          tabindex="-1"
@@ -172,7 +219,60 @@
     {% comment %} when {% endcomment %}
     {% include 'project/component/modalCtxWhen.html' %}
    
+
+    {% comment %} Then {% endcomment %}
+    <div class="modal fade"
+         id="ctxThenModal"
+         tabindex="-1"
+         aria-labelledby="ctxThenModalLabel"
+         aria-hidden="true">
+        <div class="modal-dialog">
+            <form action="{% url 'project_context_then' request.session.project %}"
+                  class="modal-content"
+                  method="post">
+                {% csrf_token %}
+                <div class="modal-header">
+                    <h5 class="modal-title" id="ctxThenModalLabel">Add Then</h5>
+                    <button type="button"
+                            class="btn-close"
+                            data-bs-dismiss="modal"
+                            aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <input type="hidden" name="c_id" class="then-c_id">
+                    <input type="hidden" name="type" class="then-c_id" value="then">
+                    <input type="hidden" name="delete" class="then-delete" value="false">
+                    <select class="form-select then-component"
+                           name="activity"
+                           aria-label="Default select example">
+                       <option selected disabled>
+                           Select Component
+                       </option>
+                       {% for a in activities %}
+                           <option value="{{ a.id }}">
+                            {{ a.activity_name }} | 
+                            {% if a.component_id is not None %}
+                            {{ a.comp.value }} —
+                            {{ a.comp.type_component }}
+                            {% endif %}
+                           </option>
+                       {% endfor %}
+                   </select>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-danger" data-bs-dismiss="modal">
+                        Cancel
+                    </button>
+                    <button type="submit" class="btn btn-primary" id="then-submit-btn">
+                        Save
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
 {% endblock modal %}
+
+
 {% block js %}
     <script>
     const givenModal = document.querySelector('#ctxGivenModal') //get id
@@ -180,7 +280,7 @@
         btn.addEventListener('click', () => {
             givenModal.querySelector('.modal-title').innerHTML = "Edit Given"
             givenModal.querySelector('.given-c_id').value = btn.dataset.id
-            givenModal.querySelector('.given-statement').value = btn.dataset.statement
+            givenModal.querySelector('.given-statement').value = btn.dataset.statement //dirubah
             var selectedIndex = 0
             if(btn.dataset.component == "None"){
                 selectedIndex = 1
@@ -215,4 +315,45 @@
     </script>
     {% include 'project/component/jsCtxWhen.html' %}
     {% include 'project/component/jsCtxAltThen.html' %}
+
+    {% comment %} JS Then {% endcomment %}
+    <script>
+        const thenModal = document.querySelector('#ctxThenModal') // Id modal
+        // nampilin di edit
+        document.querySelectorAll('.edit-ctx-then').forEach(btn => {
+            btn.addEventListener('click', () => {
+                thenModal.querySelector('.modal-title').innerHTML = "Edit Then"
+                thenModal.querySelector('.then-c_id').value = btn.dataset.id
+                var selectedIndex = 0
+                if(btn.dataset.activity == "None"){
+                    selectedIndex = 1
+                }else{
+                    try {
+                        thenModal.querySelectorAll('option').forEach(e => {
+                            if (e.value == btn.dataset.activity) {
+                                throw 'Break'
+                            }
+                            selectedIndex++
+                        })
+                    } catch (e) {
+                        if (e !== 'Break') throw e
+                    }
+                }
+                thenModal.querySelector('select').selectedIndex = selectedIndex
+            })
+        })
+        document.querySelectorAll('.delete-ctx-then').forEach(btn => {
+            btn.addEventListener('click', () => {
+                thenModal.querySelector('.then-c_id').value = btn.dataset.id
+                thenModal.querySelector('.then-delete').value = "true"
+                thenModal.querySelector('#then-submit-btn').click()
+            })
+        })
+
+        document.querySelector('#add-ctx-then').addEventListener('click', () => {
+            thenModal.querySelector('.modal-title').innerHTML = "Add Then"
+            thenModal.querySelector('.then-c_id').value = null
+            thenModal.querySelector('select').selectedIndex = 0
+        })
+        </script>
 {% endblock js %}
