@@ -1,27 +1,92 @@
 {% extends 'project/base.html' %}
+{% load static %}
+{% block head %}
+    <script src="{% static 'synchro2.min.js' %}"></script>
+{% endblock head %}
 {% block content %}
     <form method="post" enctype="multipart/form-data">
         {% csrf_token %}
-        <div class="mb-3">
-            <label for="project_name" class="form-label">project name</label>
-            <input type="text"
-                   name="project_name"
-                   id="project_name"
-                   placeholder="project name"
-                   class="form-control">
+        <div class="row">
+            <div class="col-12">
+                <div class="h3">Project Identity</div>
+                <div class="mb-3">
+                    <label for="project_name" class="form-label">project name</label>
+                    <input type="text"
+                           name="project_name"
+                           id="project_name"
+                           placeholder="project name"
+                           class="form-control">
+                </div>
+                <div class="mb-3">
+                    <label for="project_password" class="form-label">project password</label>
+                    <input type="password"
+                           name="project_password"
+                           id="project_password"
+                           placeholder="project password"
+                           class="form-control">
+                </div>
+            </div>
+            <div class="col-12 mt-3">
+                <div class="h3">Project User Story</div>
+                <div class="input-group mb-3">
+                    <span class="input-group-text" id="basic-addon1">In Order To</span>
+                    <input type="text"
+                           class="form-control"
+                           placeholder="do something"
+                           name="project_purpose">
+                </div>
+                <div class="input-group mb-3">
+                    <span class="input-group-text" id="basic-addon1">As a</span>
+                    <input type="text"
+                           class="form-control"
+                           placeholder="someone"
+                           name="project_user">
+                </div>
+                <div class="input-group mb-3">
+                    <span class="input-group-text" id="basic-addon1">I want to</span>
+                    <input type="text"
+                           class="form-control"
+                           placeholder="do something"
+                           name="project_haveto">
+                </div>
+            </div>
+            <div class="col-12 mt-3">
+                <div class="h3">Project Wireframe (SALT UML)</div>
+            </div>
+            <div class="col-6">
+                <div class="form-outline">
+                    <label for="floatingTextarea2" class="form-label">SALT Wireframe Script</label>
+                    <textarea onkeyup="showWireframe"
+                              class="form-control"
+                              id="floatingTextarea2"
+                              rows="10"></textarea>
+                </div>
+            </div>
+            <div class="col-6 align-items-center justify-content-center card">
+                <img id="targetUML" src="#">
+            </div>
+            <button type="submit" class="btn btn-primary col-12 mt-2 mb-4">create</button>
         </div>
-        <div class="mb-3">
-            <label for="project_password" class="form-label">project password</label>
-            <input type="password"
-                   name="project_password"
-                   id="project_password"
-                   placeholder="project password"
-                   class="form-control">
-        </div>
-        <div class="mb-3">
-            <label for="project_file" class="form-label">Salt PlantUML File</label>
-            <input type="file" name="file" id="project_file" class="form-control">
-        </div>
-        <button type="submit" class="btn btn-primary">create</button>
     </form>
 {% endblock content %}
+{% block js %}
+    <script>
+    const textarea = document.querySelector('#floatingTextarea2');
+    const imgUML = document.querySelector('#targetUML')
+
+    let compress = (s) => {
+        s = unescape(encodeURIComponent(s));
+        var arr = [];
+        for (var i = 0; i < s.length; i++)
+            arr.push(s.charCodeAt(i));
+        var compressor = new Zopfli.RawDeflate(arr);
+        var compressed = compressor.compress();
+        return encode64_(compressed);
+    }
+
+    let showWireframe = () => {
+        let saltSyntax = textarea.value;
+        imgUML.setAttribute('src', 'http://www.plantuml.com/plantuml/png/' + compress(saltSyntax))
+    }
+    </script>
+{% endblock js %}
