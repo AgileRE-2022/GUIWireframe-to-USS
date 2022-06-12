@@ -5,7 +5,7 @@ from django.views.decorators.csrf import csrf_protect
 from django.template.response import TemplateResponse
 import uuid
 
-from .models import Context, Wireframe
+from .models import Context, Scenario, Wireframe
 from .functions.compdetector import *
 from .middleware import isGuest
 
@@ -86,13 +86,15 @@ def details(request, id):
     args['wireframe'] = Wireframe.objects.get(id=id)
     args['components'] = Component.objects.filter(wireframe_id=id)
 
-    ctx = {}
-    ctx["given"] = Context.objects.filter(context_type="given")
-    ctx["athen"] = Context.objects.filter(context_type="alt-then")
-    ctx["when"] = Context.objects.filter(context_type="when")
-    ctx["then"] = Context.objects.filter(context_type="then")
+    # ctx = {}
+    # ctx["given"] = Context.objects.filter(context_type="given")
+    # ctx["athen"] = Context.objects.filter(context_type="alt-then")
+    # ctx["when"] = Context.objects.filter(context_type="when")
+    # ctx["then"] = Context.objects.filter(context_type="then")
 
-    args["context"] = ctx
+    # args["context"] = ctx
+
+    args['scenarios'] = Scenario.objects.filter(wireframe_id=id)
     return TemplateResponse(request, template, args)
 
 
@@ -369,4 +371,56 @@ def ctxAThen(request, id):
 
 @csrf_protect
 def addScenario(request, id):
+    if request.method == "POST":
+        scenario = request.POST.get("scenario")
+        given_template = request.POST.get("given-template")
+        given_statement = request.POST.get("given-statement")
+        when_template = request.POST.get("when-template")
+        when_statement = request.POST.get("when-statement")
+        when_component = request.POST.get("when-component")
+        then_template = request.POST.get("then-template")
+        then_statement = request.POST.get("then-statement")
+        then_component = request.POST.get("then-component")
+
+        s = Scenario(
+            wireframe_id=request.session["project"],
+            scenario_title=scenario
+        )
+        s.save()
+
+        g = Context(
+            context_type="given",
+            component_id=None,
+            context_statement=given_statement,
+            scenario_id=s.id,
+            context_template=given_template,
+        )
+        g.save()
+
+        if when_statement == "":
+            when_statement = None
+        if when_component == "":
+            when_component = None
+        w = Context(
+            context_type="when",
+            component_id=when_component,
+            context_statement=when_statement,
+            scenario_id=s.id,
+            context_template=when_template,
+        )
+        w.save()
+
+        if then_statement == "":
+            then_statement = None
+        if then_component == "":
+            then_component = None
+        t = Context(
+            context_type="then",
+            component_id=then_component,
+            context_statement=then_statement,
+            scenario_id=s.id,
+            context_template=then_template,
+        )
+        t.save()
+
     return redirect('project_details', request.session["project"])

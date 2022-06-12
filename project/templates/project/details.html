@@ -1,111 +1,143 @@
 {% extends 'project/base.html' %}
 {% load static %}
 {% block head %}
-<script src="{% static 'synchro2.min.js' %}"></script>
+    <script src="{% static 'synchro2.min.js' %}"></script>
 {% endblock head %}
 {% block content %}
-<div class="row">
-    {% comment %} WIREFRAME INFO {% endcomment %}
-    <div class="col-12 col-lg-6 mb-2 mt-4">
-        <div class="h3 mb-3">Wireframe</div>
-        <div class="row mx-1">
-            <button class="btn btn-primary">Export to User-Story Scenario</button>
-            <div class="col-6 mt-4 text-muted h6" style="white-space: pre-wrap;">{{wireframe.project_file}}</div>
-            <div class="col-6 mt-4 justify-content-center align-items-center card">
-                <img src="#" alt="" data-salt="{{ wireframe.project_file }}" id="saltImage">
+    <div class="row">
+        {% comment %} WIREFRAME INFO {% endcomment %}
+        <div class="col-12 col-lg-6 mb-2 mt-4">
+            <div class="h3 mb-3">Wireframe</div>
+            <div class="row mx-1">
+                <button class="btn btn-primary">Export to User-Story Scenario</button>
+                <div class="col-6 mt-4 text-muted h6" style="white-space: pre-wrap;">{{ wireframe.project_file }}</div>
+                <div class="col-6 mt-4 justify-content-center align-items-center card">
+                    <img src="#"
+                         alt=""
+                         data-salt="{{ wireframe.project_file }}"
+                         id="saltImage">
+                </div>
+            </div>
+            <div class="row h5 p-4">
+                <div class="h4">User Story</div>
+                <div class="col-12">
+                    <span class="text-muted">In Order to</span> {{ wireframe.project_us_purpose }}
+                </div>
+                <div class="col-12">
+                    <span class="text-muted">As a</span> {{ wireframe.project_us_user }}
+                </div>
+                <div class="col-12">
+                    <span class="text-muted">I Have to</span> {{ wireframe.project_us_todo }}
+                </div>
             </div>
         </div>
-        <div class="row h5 p-4">
-            <div class="h4">User Story</div>
-            <div class="col-12">
-                <span class="text-muted">In Order to</span> {{ wireframe.project_us_purpose }}
-            </div>
-            <div class="col-12">
-                <span class="text-muted">As a</span> {{ wireframe.project_us_user }}
-            </div>
-            <div class="col-12">
-                <span class="text-muted">I Have to</span> {{ wireframe.project_us_todo }}
-            </div>
+        {% comment %} COMPONENT {% endcomment %}
+        <div class="col-lg-6 col-12 mt-3 mb-2">
+            <div class="h3 mb-3">List Component</div>
+            <table class="table">
+                <thead>
+                    <tr>
+                        <th scope="col">#</th>
+                        <th scope="col">Name</th>
+                        <th scope="col">Type</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for comp in components %}
+                        <tr>
+                            <th scope="row">{{ forloop.counter }}</th>
+                            <td>{{ comp.value }}</td>
+                            <td>{{ comp.type_component }}</td>
+                        </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
         </div>
+        {% comment %} activity {% endcomment %}
+        {% comment %} context {% endcomment %}
     </div>
-    {% comment %} COMPONENT {% endcomment %}
-    <div class="col-lg-6 col-12 mt-3 mb-2">
-        <div class="h3 mb-3">List Component</div>
-        <table class="table">
-            <thead>
-                <tr>
-                    <th scope="col">#</th>
-                    <th scope="col">Name</th>
-                    <th scope="col">Type</th>
-                </tr>
-            </thead>
-            <tbody>
-                {% for comp in components %}
-                <tr>
-                    <th scope="row">{{ forloop.counter }}</th>
-                    <td>{{ comp.value }}</td>
-                    <td>{{ comp.type_component }}</td>
-                </tr>
-                {% endfor %}
-            </tbody>
-        </table>
-    </div>
-    {% comment %} activity {% endcomment %}
-    {% comment %} context {% endcomment %}
-</div>
-<div class="row mt-2">
-    <button class="col-12 btn btn-primary" data-bs-toggle="modal" data-bs-target="#modalScenario">Add Scenario</button>
-    <div class="card my-4" style="">
-        <div class="card-header h4">Scenario : bla bla bla
-        </div>
-        <div class="card-body">
-            <div class="mb-2">
-                <button class="btn btn-warning mx-2">Edit Scenario</button>
-                <button class="btn btn-danger mx-2">Delete Scenario</button>
+    <div class="row mt-2">
+        <button class="col-12 btn btn-primary"
+                data-bs-toggle="modal"
+                data-bs-target="#modalScenario">Add Scenario</button>
+        {% for scene in scenarios %}
+            <div class="card my-4" style="">
+                <div class="card-header h4">Scenario : {{ scene.scenario_title }}</div>
+                <div class="card-body">
+                    <div class="mb-2">
+                        <button class="btn btn-warning mx-2">Edit Scenario</button>
+                        <button class="btn btn-danger mx-2">Delete Scenario</button>
+                    </div>
+                    <div class="mb-4">
+                        <button class="btn btn-primary mx-2">Add Given</button>
+                        <button class="btn btn-primary mx-2">Add When</button>
+                        <button class="btn btn-primary mx-2">Add Then</button>
+                    </div>
+                    {% for given in scene.given %}
+                        <p class="card-text">
+                            <button class="btn btn-warning">EDIT</button>
+                            <button class="btn btn-danger"
+                                    {% if forloop.counter == 1 %}disabled{% endif %}>DELETE</button>
+                            <span class="text-muted h5">
+                                {% if forloop.counter == 1 %}
+                                    GIVEN
+                                {% else %}
+                                    AND
+                                {% endif %}
+                            </span> {{ given.text }}
+                        </p>
+                    {% endfor %}
+                    {% for when in scene.when %}
+                        <p class="card-text">
+                            <button class="btn btn-warning">EDIT</button>
+                            <button class="btn btn-danger"
+                                    {% if forloop.counter == 1 %}disabled{% endif %}>DELETE</button>
+                            <span class="text-muted h5">
+                                {% if forloop.counter == 1 %}
+                                    WHEN
+                                {% else %}
+                                    AND
+                                {% endif %}
+                            </span> {{ when.text }}
+                        </p>
+                    {% endfor %}
+                    {% for then in scene.then %}
+                        <p class="card-text">
+                            <button class="btn btn-warning">
+                                EDIT
+                            </button>
+                            <button class="btn btn-danger"
+                                    {% if forloop.counter == 1 %}disabled{% endif %}>
+                                DELETE
+                            </button>
+                            <span class="text-muted h5">
+                                {% if forloop.counter == 1 %}
+                                    then
+                                {% else %}
+                                    AND
+                                {% endif %}
+                            </span> {{ then.text }}
+                        </p>
+                    {% endfor %}
+                </div>
             </div>
-            <div class="mb-4">
-                <button class="btn btn-primary mx-2">Add Given</button>
-                <button class="btn btn-primary mx-2">Add When</button>
-                <button class="btn btn-primary mx-2">Add Then</button>
-            </div>
-            <p class="card-text">
-                <button class="btn btn-warning">EDIT</button>
-                <button class="btn btn-danger" disabled>DELETE</button>
-                <span class="text-muted h5">GIVEN</span> Some quick example text to build on the card
-                title and make up the bulk of the card's content.</p>
-            <p class="card-text">
-                <button class="btn btn-warning">EDIT</button>
-                <button class="btn btn-danger">DELETE</button>
-                <span class="text-muted h5">AND</span> Some quick example text to build on the card
-                title and make up the bulk of the card's content.</p>
-            <p class="card-text">
-                <button class="btn btn-warning">EDIT</button>
-                <button class="btn btn-danger" disabled>DELETE</button>
-                <span class="text-muted h5">WHEN</span> Some quick example text to build on the card
-                title and make up the bulk of the card's content.</p>
-            <p class="card-text">
-                <button class="btn btn-warning">EDIT</button>
-                <button class="btn btn-danger" disabled>DELETE</button>
-                <span class="text-muted h5">THEN</span> Some quick example text to build on the card
-                title and make up the bulk of the card's content.</p>
-        </div>
+        {% endfor %}
     </div>
-</div>
 {% endblock content %}
 {% block modal %}
-{% comment %} Given {% endcomment %}
-{% include 'project/component/modalCtxGiven.html' %}
-{% comment %} Alt-Then {% endcomment %}
-{% include 'project/component/modalCtxAltThen.html' %}
-{% comment %} when {% endcomment %}
-{% include 'project/component/modalCtxWhen.html' %}
-{% comment %} Then {% endcomment %}
-{% include 'project/component/modalCtxThen.html' %}
-{% comment %} Modal Scenario {% endcomment %}
-{% include 'project/component/modalScenario.html' %}
+    {% comment %} Given {% endcomment %}
+    {% include 'project/component/modalCtxGiven.html' %}
+    {% comment %} Alt-Then {% endcomment %}
+    {% include 'project/component/modalCtxAltThen.html' %}
+    {% comment %} when {% endcomment %}
+    {% include 'project/component/modalCtxWhen.html' %}
+    {% comment %} Then {% endcomment %}
+    {% include 'project/component/modalCtxThen.html' %}
+    {% comment %} Modal Scenario {% endcomment %}
+    {% include 'project/component/modalScenario.html' %}
 {% endblock modal %}
 {% block js %}
-<script>
+    <script>
     let compress = (s) => {
         s = unescape(encodeURIComponent(s));
         var arr = [];
@@ -119,10 +151,10 @@
     const imageSALT = document.querySelector('#saltImage')
     var saltSyntax = imageSALT.dataset.salt
     imageSALT.setAttribute('src', 'http://www.plantuml.com/plantuml/png/' + compress(saltSyntax))
-</script>
-{% include 'project/component/jsCtxGiven.html' %}
-{% include 'project/component/jsCtxWhen.html' %}
-{% include 'project/component/jsCtxAltThen.html' %}
-{% include 'project/component/jsCtxThen.html' %}
-{% include 'project/component/jsModalScenario.html' %}
+    </script>
+    {% include 'project/component/jsCtxGiven.html' %}
+    {% include 'project/component/jsCtxWhen.html' %}
+    {% include 'project/component/jsCtxAltThen.html' %}
+    {% include 'project/component/jsCtxThen.html' %}
+    {% include 'project/component/jsModalScenario.html' %}
 {% endblock js %}
