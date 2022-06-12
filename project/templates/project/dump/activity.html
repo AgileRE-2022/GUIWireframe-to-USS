@@ -1,0 +1,29 @@
+<div class="col-lg-6 col-12 mt-3 mb-2">
+    <div class="h3 mb-3">List Activity</div>
+    <a href="{% url 'project_activiy_add' wireframe.id %}"
+       class="btn btn-primary my-1">Add Activity</a>
+    <table class="table table-bordered">
+        <tr class="table-primary">
+            <th>Activity</th>
+            <th>Component</th>
+            <th>action</th>
+        </tr>
+        {% for activity in activities %}
+            <tr>
+                <td>{{ activity.activity_name }}</td>
+                <td>
+                    {% if activity.component_id is not None %}
+                        {{ activity.comp.value }} —
+                        {{ activity.comp.type_component }}
+                    {% endif %}
+                </td>
+                <td>
+                    <a href="{% url 'project_activiy_edit' request.session.project activity.id %}"
+                       class="btn btn-warning">Edit</a>
+                    <a href="{% url 'project_activity_delete' request.session.project activity.id %}"
+                       class="btn btn-danger">Delete</a>
+                </td>
+            </tr>
+        {% endfor %}
+    </table>
+</div>

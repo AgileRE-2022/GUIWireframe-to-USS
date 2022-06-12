@@ -1,0 +1,37 @@
+<div class="">
+    <ul class="list-group mb-3">
+        <li class="list-group-item list-group-item-primary d-flex justify-content-between align-items-center">
+            <strong class="">Given</strong>
+            <button data-bs-toggle="modal" data-bs-target="#ctxGivenModal" id="add-ctx-given"
+                class="ml-2 btn btn-primary">
+                Add
+            </button>
+        </li>
+        <ul class="list-group">
+            {% for g in context.given %}
+            <li class="list-group-item  d-flex justify-content-between align-items-center">
+                <div class="">
+                    {{ g.context_statement }}
+                    {% if g.component_id != None %}
+                    <strong>for</strong> {{ g.comp.value }}
+                    ({{ g.comp.type_component }})
+                    {% endif %}
+                </div>
+                <div class="">
+                    {% comment %} EDIT {% endcomment %}
+                    <button class="btn btn-warning edit-ctx-given" data-bs-toggle="modal" {% comment %} Manggil modal
+                        {% endcomment %} data-bs-target="#ctxGivenModal" {% comment %} DOM {% endcomment %}
+                        data-id="{{ g.id }}" data-statement="{{ g.context_statement }}" {% comment %} Butuhnya activity
+                        {% endcomment %} data-component="{{ g.component_id }}">
+                        Edit
+                    </button>
+                    <button class="btn btn-danger delete-ctx-given" data-id="{{ g.id }}"
+                        data-statement="{{ g.context_statement }}" data-component="{{ g.component_id }}">
+                        Delete
+                    </button>
+                </div>
+            </li>
+            {% endfor %}
+        </ul>
+    </ul>
+</div>

@@ -1,0 +1,49 @@
+<div class="modal fade"
+         id="ctxGivenModal"
+         tabindex="-1"
+         aria-labelledby="ctxGivenModalLabel"
+         aria-hidden="true">
+        <div class="modal-dialog">
+            <form action="{% url 'project_context_given' request.session.project %}"
+                  class="modal-content"
+                  method="post">
+                {% csrf_token %}
+                <div class="modal-header">
+                    <h5 class="modal-title" id="ctxGivenModalLabel">Add Given</h5>
+                    <button type="button"
+                            class="btn-close"
+                            data-bs-dismiss="modal"
+                            aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <input type="hidden" name="c_id" class="given-c_id">
+                    <input type="hidden" name="delete" class="given-delete" value="false">
+                    <input type="text"
+                           name="statement"
+                           class="form-control given-statement"
+                           id=""
+                           placeholder="Some Statement">
+                    <div class="m-3">for</div>
+                    <select class="form-select given-component"
+                            name="component"
+                            aria-label="Default select example">
+                        <option selected disabled>
+                            Select Component
+                        </option>
+                        <option value="">
+                            no component
+                        </option>
+                        {% for c in components %}
+                            <option value="{{ c.id }}">
+                                {{ c.value }} | {{ c.type_component }}
+                            </option>
+                        {% endfor %}
+                    </select>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-danger" data-bs-dismiss="modal">Cancel</button>
+                    <button type="submit" class="btn btn-primary given-submit-btn">Save</button>
+                </div>
+            </form>
+        </div>
+    </div>
