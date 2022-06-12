@@ -1,4 +1,8 @@
 {% extends 'project/base.html' %}
+{% load static %}
+{% block head %}
+    <script src="{% static 'synchro2.min.js' %}"></script>
+{% endblock head %}
 {% block content %}
     <div class="row">
         <div class="col-12 col-lg-6 mb-2 mt-4">
@@ -6,6 +10,9 @@
             <div class="row mx-1">
                 <button class="btn btn-primary mb-2">See Script</button>
                 <button class="btn btn-primary">Export to User-Story Scenario</button>
+                <div class="col-12 mt-4 justify-content-center align-items-center card">
+                    <img src="#" alt="" data-salt="{{wireframe.project_file}}" id="saltImage">
+                </div>
             </div>
         </div>
         <div class="col-12 col-lg-6 mb-2 mt-3">
@@ -28,137 +35,150 @@
                             <li class="list-group-item  d-flex justify-content-between align-items-center">
                                 <div class="">
                                     {{ g.context_statement }}
-                                    {% if g.component_id != None %}<strong>for</strong> {{ g.comp.value }} ({{ g.comp.type_component }}){% endif %}
+                                    {% if g.component_id != None %}
+                                        <strong>for</strong> {{ g.comp.value }}
+                                        ({{ g.comp.type_component }})
+                                    {% endif %}
                                 </div>
                                 <div class="">
                                     {% comment %} EDIT {% endcomment %}
                                     <button class="btn btn-warning edit-ctx-given"
-                                            data-bs-toggle="modal" {% comment %} Manggil modal {% endcomment %}
-                                            data-bs-target="#ctxGivenModal" {% comment %} DOM {% endcomment %}
-                                            data-id="{{ g.id }}"
-                                            data-statement="{{ g.context_statement }}" {% comment %} Butuhnya activity {% endcomment %}
-                                            data-component="{{ g.component_id }}">
-                                        Edit
-                                    </button>
-                                    <button class="btn btn-danger delete-ctx-given"
+                                            data-bs-toggle="modal"
+                                            {% comment %}
+                                            Manggil
+                                            modal
+                                            {% endcomment %}
+                                            data-bs-target="#ctxGivenModal"
+                                            {% comment %}
+                                            DOM
+                                            {% endcomment %}
                                             data-id="{{ g.id }}"
                                             data-statement="{{ g.context_statement }}"
+                                            {% comment %}
+                                            Butuhnya
+                                            activity
+                                            {% endcomment %}
                                             data-component="{{ g.component_id }}">
-                                        Delete
-                                    </button>
-                                </div>
-                            </li>
-                        {% endfor %}
-                    </ul>
+                                    Edit
+                                </button>
+                                <button class="btn btn-danger delete-ctx-given"
+                                        data-id="{{ g.id }}"
+                                        data-statement="{{ g.context_statement }}"
+                                        data-component="{{ g.component_id }}">
+                                    Delete
+                                </button>
+                            </div>
+                        </li>
+                    {% endfor %}
                 </ul>
-            </div>
-            {% comment %} Then {% endcomment %}
-           
-            {% comment %} when {% endcomment %}
-            {% include "project/component/listCtxWhen.html" %}
-            {% comment %} then {% endcomment %}
-            <div class="">
-                <ul class="list-group mb-3">
-                    <li class="list-group-item list-group-item-primary d-flex justify-content-between align-items-center">
-                        <strong class="">Then</strong>
-                        <button data-bs-toggle="modal"
-                                data-bs-target="#ctxThenModal"
-                                id="add-ctx-then"
-                                class="ml-2 btn btn-primary">
-                            Add
-                        </button>
-                    </li>
-                    <ul class="list-group">
-                        {% for t in context.then %}
-                            <li class="list-group-item  d-flex justify-content-between align-items-center">
-                                <div class="">
-                                    {{ t.activity.activity_name }} 
-                                    {% if t.activity.component_id is not None %} |
+            </ul>
+        </div>
+        {% comment %} Then {% endcomment %}
+        {% comment %} when {% endcomment %}
+        {% include "project/component/listCtxWhen.html" %}
+        {% comment %} then {% endcomment %}
+        <div class="">
+            <ul class="list-group mb-3">
+                <li class="list-group-item list-group-item-primary d-flex justify-content-between align-items-center">
+                    <strong class="">Then</strong>
+                    <button data-bs-toggle="modal"
+                            data-bs-target="#ctxThenModal"
+                            id="add-ctx-then"
+                            class="ml-2 btn btn-primary">
+                        Add
+                    </button>
+                </li>
+                <ul class="list-group">
+                    {% for t in context.then %}
+                        <li class="list-group-item  d-flex justify-content-between align-items-center">
+                            <div class="">
+                                {{ t.activity.activity_name }}
+                                {% if t.activity.component_id is not None %}
+                                    |
                                     {{ t.activity.comp.value }} —
                                     {{ t.activity.comp.type_component }}
-                                    {% endif %}
-                                </div>
-                                <div class="">
-                                    <button class="btn btn-warning edit-ctx-then"
-                                            data-bs-toggle="modal"
-                                            data-bs-target="#ctxThenModal"
-                                            data-id="{{ t.id }}"
-                                            data-activity="{{ t.activity_id }}">
-                                        Edit
-                                    </button>
-                                    <button class="btn btn-danger delete-ctx-then"
-                                            data-id="{{ t.id }}"
-                                            data-activity="{{ t.activity_id }}">
-                                        Delete</button>
-                                </div>
-                            </li>
-                        {% endfor %}
-                    </ul>
+                                {% endif %}
+                            </div>
+                            <div class="">
+                                <button class="btn btn-warning edit-ctx-then"
+                                        data-bs-toggle="modal"
+                                        data-bs-target="#ctxThenModal"
+                                        data-id="{{ t.id }}"
+                                        data-activity="{{ t.activity_id }}">
+                                    Edit
+                                </button>
+                                <button class="btn btn-danger delete-ctx-then"
+                                        data-id="{{ t.id }}"
+                                        data-activity="{{ t.activity_id }}">Delete</button>
+                            </div>
+                        </li>
+                    {% endfor %}
                 </ul>
-            </div>
-            {% comment %} alt-then {% endcomment %}
-            {% include "project/component/listCtxAltThen.html" %}
-            <a href="{% url 'project_context' request.session.project %}" class="btn btn-primary mt-3">Halaman Lama Context</a>
+            </ul>
         </div>
-
-        {% comment %} COMPONENT and RULES {% endcomment %}
-        <div class="col-lg-6 col-12 mt-3 mb-2">
-            <div class="h3 mb-3">List Component and Rules</div>
-            <a href="{% url 'project_rules_add' wireframe.id %}"
-               class="btn btn-primary my-1">Add Rules</a>
-            {% for comp in components %}
-                <ul class="list-group mb-3">
-                    <li class="list-group-item list-group-item-primary d-flex justify-content-between align-items-center">
-                        {{ comp.value }} | Tipe : {{ comp.type_component }}
-                    </li>
-                    <ul class="list-group">
-                        {% for rule in comp.rules %}
-                            <li class="list-group-item d-flex justify-content-between align-items-center">
-                                {{ rule.rules_desc }}
-                                <div>
-                                    <a href="{% url 'project_rules_edit' request.session.project rule.id %}"
-                                       class="btn btn-warning">Edit</a>
-                                    <a href="{% url 'project_rules_delete' request.session.project rule.id %}"
-                                       class="btn btn-danger">Delete</a>
-                                </div>
-                            </li>
-                        {% endfor %}
-                    </ul>
-                </ul>
-            {% endfor %}
-        </div>
-        <div class="col-lg-6 col-12 mt-3 mb-2">
-            <div class="h3 mb-3">List Activity</div>
-            <a href="{% url 'project_activiy_add' wireframe.id %}"
-               class="btn btn-primary my-1">Add Activity</a>
-            <table class="table table-bordered">
-                <tr class="table-primary">
-                    <th>Activity</th>
-                    <th>Component</th>
-                    <th>action</th>
-                </tr>
-                {% for activity in activities %}
-                    <tr>
-                        <td>{{ activity.activity_name }}</td>
-                        <td>
-                            {% if activity.component_id is not None %}
-                                {{ activity.comp.value }} —
-                                {{ activity.comp.type_component }}
-                            {% endif %}
-                        </td>
-                        <td>
-                            <a href="{% url 'project_activiy_edit' request.session.project activity.id %}"
-                               class="btn btn-warning">Edit</a>
-                            <a href="{% url 'project_activity_delete' request.session.project activity.id %}"
-                               class="btn btn-danger">Delete</a>
-                        </td>
-                    </tr>
-                {% endfor %}
-            </table>
-        </div>
+        {% comment %} alt-then {% endcomment %}
+        {% include "project/component/listCtxAltThen.html" %}
+        <a href="{% url 'project_context' request.session.project %}"
+           class="btn btn-primary mt-3">Halaman Lama
+        Context</a>
     </div>
+    {% comment %} COMPONENT and RULES {% endcomment %}
+    <div class="col-lg-6 col-12 mt-3 mb-2">
+        <div class="h3 mb-3">List Component and Rules</div>
+        <a href="{% url 'project_rules_add' wireframe.id %}"
+           class="btn btn-primary my-1">Add Rules</a>
+        {% for comp in components %}
+            <ul class="list-group mb-3">
+                <li class="list-group-item list-group-item-primary d-flex justify-content-between align-items-center">
+                    {{ comp.value }} | Tipe : {{ comp.type_component }}
+                </li>
+                <ul class="list-group">
+                    {% for rule in comp.rules %}
+                        <li class="list-group-item d-flex justify-content-between align-items-center">
+                            {{ rule.rules_desc }}
+                            <div>
+                                <a href="{% url 'project_rules_edit' request.session.project rule.id %}"
+                                   class="btn btn-warning">Edit</a>
+                                <a href="{% url 'project_rules_delete' request.session.project rule.id %}"
+                                   class="btn btn-danger">Delete</a>
+                            </div>
+                        </li>
+                    {% endfor %}
+                </ul>
+            </ul>
+        {% endfor %}
+    </div>
+    <div class="col-lg-6 col-12 mt-3 mb-2">
+        <div class="h3 mb-3">List Activity</div>
+        <a href="{% url 'project_activiy_add' wireframe.id %}"
+           class="btn btn-primary my-1">Add Activity</a>
+        <table class="table table-bordered">
+            <tr class="table-primary">
+                <th>Activity</th>
+                <th>Component</th>
+                <th>action</th>
+            </tr>
+            {% for activity in activities %}
+                <tr>
+                    <td>{{ activity.activity_name }}</td>
+                    <td>
+                        {% if activity.component_id is not None %}
+                            {{ activity.comp.value }} —
+                            {{ activity.comp.type_component }}
+                        {% endif %}
+                    </td>
+                    <td>
+                        <a href="{% url 'project_activiy_edit' request.session.project activity.id %}"
+                           class="btn btn-warning">Edit</a>
+                        <a href="{% url 'project_activity_delete' request.session.project activity.id %}"
+                           class="btn btn-danger">Delete</a>
+                    </td>
+                </tr>
+            {% endfor %}
+        </table>
+    </div>
+</div>
 {% endblock content %}
-
 {% block modal %}
     {% comment %} Given {% endcomment %}
     <div class="modal fade"
@@ -172,11 +192,14 @@
                   method="post">
                 {% csrf_token %}
                 <div class="modal-header">
-                    <h5 class="modal-title" id="ctxGivenModalLabel">Add Given</h5>
+                    <h5 class="modal-title" id="ctxGivenModalLabel">
+                        Add Given
+                    </h5>
                     <button type="button"
                             class="btn-close"
                             data-bs-dismiss="modal"
-                            aria-label="Close"></button>
+                            aria-label="Close">
+                    </button>
                 </div>
                 <div class="modal-body">
                     <input type="hidden" name="c_id" class="given-c_id">
@@ -186,7 +209,9 @@
                            class="form-control given-statement"
                            id=""
                            placeholder="Some Statement">
-                    <div class="m-3">for</div>
+                    <div class="m-3">
+                        for
+                    </div>
                     <select class="form-select given-component"
                             name="component"
                             aria-label="Default select example">
@@ -197,10 +222,10 @@
                             no component
                         </option>
                         {% for c in components %}
-                        <option value="{{ c.id }}">
-                            {{ c.value }} | {{ c.type_component }}
-                        </option>
-                    {% endfor %}
+                            <option value="{{ c.id }}">
+                                {{ c.value }} | {{ c.type_component }}
+                            </option>
+                        {% endfor %}
                     </select>
                 </div>
                 <div class="modal-footer">
@@ -218,8 +243,6 @@
     {% include 'project/component/modalCtxAltThen.html' %}
     {% comment %} when {% endcomment %}
     {% include 'project/component/modalCtxWhen.html' %}
-   
-
     {% comment %} Then {% endcomment %}
     <div class="modal fade"
          id="ctxThenModal"
@@ -232,32 +255,35 @@
                   method="post">
                 {% csrf_token %}
                 <div class="modal-header">
-                    <h5 class="modal-title" id="ctxThenModalLabel">Add Then</h5>
+                    <h5 class="modal-title" id="ctxThenModalLabel">
+                        Add Then
+                    </h5>
                     <button type="button"
                             class="btn-close"
                             data-bs-dismiss="modal"
-                            aria-label="Close"></button>
+                            aria-label="Close">
+                    </button>
                 </div>
                 <div class="modal-body">
                     <input type="hidden" name="c_id" class="then-c_id">
                     <input type="hidden" name="type" class="then-c_id" value="then">
                     <input type="hidden" name="delete" class="then-delete" value="false">
                     <select class="form-select then-component"
-                           name="activity"
-                           aria-label="Default select example">
-                       <option selected disabled>
-                           Select Component
-                       </option>
-                       {% for a in activities %}
-                           <option value="{{ a.id }}">
-                            {{ a.activity_name }} | 
-                            {% if a.component_id is not None %}
-                            {{ a.comp.value }} —
-                            {{ a.comp.type_component }}
-                            {% endif %}
-                           </option>
-                       {% endfor %}
-                   </select>
+                            name="activity"
+                            aria-label="Default select example">
+                        <option selected disabled>
+                            Select Component
+                        </option>
+                        {% for a in activities %}
+                            <option value="{{ a.id }}">
+                                {{ a.activity_name }} |
+                                {% if a.component_id is not None %}
+                                    {{ a.comp.value }} —
+                                    {{ a.comp.type_component }}
+                                {% endif %}
+                            </option>
+                        {% endfor %}
+                    </select>
                 </div>
                 <div class="modal-footer">
                     <button type="button" class="btn btn-danger" data-bs-dismiss="modal">
@@ -271,9 +297,22 @@
         </div>
     </div>
 {% endblock modal %}
-
-
 {% block js %}
+    <script>
+    let compress = (s) => {
+        s = unescape(encodeURIComponent(s));
+        var arr = [];
+        for (var i = 0; i < s.length; i++)
+            arr.push(s.charCodeAt(i));
+        var compressor = new Zopfli.RawDeflate(arr);
+        var compressed = compressor.compress();
+        return encode64_(compressed);
+    }
+
+    const imageSALT = document.querySelector('#saltImage')
+    var saltSyntax = imageSALT.dataset.salt
+    imageSALT.setAttribute('src', 'http://www.plantuml.com/plantuml/png/' + compress(saltSyntax))
+    </script>
     <script>
     const givenModal = document.querySelector('#ctxGivenModal') //get id
     document.querySelectorAll('.edit-ctx-given').forEach(btn => {
@@ -282,9 +321,9 @@
             givenModal.querySelector('.given-c_id').value = btn.dataset.id
             givenModal.querySelector('.given-statement').value = btn.dataset.statement //dirubah
             var selectedIndex = 0
-            if(btn.dataset.component == "None"){
+            if (btn.dataset.component == "None") {
                 selectedIndex = 1
-            }else{
+            } else {
                 try {
                     givenModal.querySelectorAll('option').forEach(e => {
                         if (e.value == btn.dataset.component) {
@@ -315,45 +354,44 @@
     </script>
     {% include 'project/component/jsCtxWhen.html' %}
     {% include 'project/component/jsCtxAltThen.html' %}
-
     {% comment %} JS Then {% endcomment %}
     <script>
-        const thenModal = document.querySelector('#ctxThenModal') // Id modal
-        // nampilin di edit
-        document.querySelectorAll('.edit-ctx-then').forEach(btn => {
-            btn.addEventListener('click', () => {
-                thenModal.querySelector('.modal-title').innerHTML = "Edit Then"
-                thenModal.querySelector('.then-c_id').value = btn.dataset.id
-                var selectedIndex = 0
-                if(btn.dataset.activity == "None"){
-                    selectedIndex = 1
-                }else{
-                    try {
-                        thenModal.querySelectorAll('option').forEach(e => {
-                            if (e.value == btn.dataset.activity) {
-                                throw 'Break'
-                            }
-                            selectedIndex++
-                        })
-                    } catch (e) {
-                        if (e !== 'Break') throw e
-                    }
+    const thenModal = document.querySelector('#ctxThenModal') // Id modal
+    // nampilin di edit
+    document.querySelectorAll('.edit-ctx-then').forEach(btn => {
+        btn.addEventListener('click', () => {
+            thenModal.querySelector('.modal-title').innerHTML = "Edit Then"
+            thenModal.querySelector('.then-c_id').value = btn.dataset.id
+            var selectedIndex = 0
+            if (btn.dataset.activity == "None") {
+                selectedIndex = 1
+            } else {
+                try {
+                    thenModal.querySelectorAll('option').forEach(e => {
+                        if (e.value == btn.dataset.activity) {
+                            throw 'Break'
+                        }
+                        selectedIndex++
+                    })
+                } catch (e) {
+                    if (e !== 'Break') throw e
                 }
-                thenModal.querySelector('select').selectedIndex = selectedIndex
-            })
+            }
+            thenModal.querySelector('select').selectedIndex = selectedIndex
         })
-        document.querySelectorAll('.delete-ctx-then').forEach(btn => {
-            btn.addEventListener('click', () => {
-                thenModal.querySelector('.then-c_id').value = btn.dataset.id
-                thenModal.querySelector('.then-delete').value = "true"
-                thenModal.querySelector('#then-submit-btn').click()
-            })
+    })
+    document.querySelectorAll('.delete-ctx-then').forEach(btn => {
+        btn.addEventListener('click', () => {
+            thenModal.querySelector('.then-c_id').value = btn.dataset.id
+            thenModal.querySelector('.then-delete').value = "true"
+            thenModal.querySelector('#then-submit-btn').click()
         })
+    })
 
-        document.querySelector('#add-ctx-then').addEventListener('click', () => {
-            thenModal.querySelector('.modal-title').innerHTML = "Add Then"
-            thenModal.querySelector('.then-c_id').value = null
-            thenModal.querySelector('select').selectedIndex = 0
-        })
-        </script>
+    document.querySelector('#add-ctx-then').addEventListener('click', () => {
+        thenModal.querySelector('.modal-title').innerHTML = "Add Then"
+        thenModal.querySelector('.then-c_id').value = null
+        thenModal.querySelector('select').selectedIndex = 0
+    })
+    </script>
 {% endblock js %}

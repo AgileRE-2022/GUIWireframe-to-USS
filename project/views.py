@@ -47,35 +47,27 @@ def create(request):
         # Validate Input Here
         name = request.POST.get('project_name')
         password = request.POST.get('project_password')
-        filecontent = ""
-        if request.FILES['file']:
-            file = request.FILES['file']
-            print("nama file : " + file.name)
-            # validator plant UML
-            filename = file.name
-            tipeFile = ["plantuml", "PU", "puml"]
-            if filename.split('.')[-1] in tipeFile:
-                print('is plant UML')
-                arr = []
-                for line in file:
-                    filecontent += line.decode("utf-8")
-                    arr.append(line.decode("utf-8"))
-                print(arr)
+        purpose = request.POST.get('project_purpose')
+        user = request.POST.get('project_user')
+        todo = request.POST.get('project_todo')
+        filecontent = request.POST.get('saltScript')
 
-                w = Wireframe(
-                    project_name=name,
-                    project_password=password,
-                    project_file=filecontent,
-                    project_uid=str(uuid.uuid4()))
-                w.save()
+        w = Wireframe(
+            project_name=name,
+            project_password=password,
+            project_file=filecontent,
+            project_uid=str(uuid.uuid4()),
+            project_us_purpose=purpose,
+            project_us_user=user,
+            project_us_todo=todo)
+        w.save()
 
-                arrbersih = bersih(arr)
-                print(arrbersih)
-                inspectcomp(arrbersih, w.id)
-            else:
-                print('!= plant UML')
-
+        arr = str(filecontent).splitlines()
+        arrbersih = bersih(arr)
+        print(arrbersih)
+        inspectcomp(arrbersih, w.id)
         return redirect('project_list')
+
     else:
         args = {}
         template = 'project/create.html'
@@ -331,7 +323,7 @@ def ctxThen(request, id):
         print("Delete")
         c.delete()
         return redirect('project_details', request.session["project"])
-    
+
     if activity is not None and tipe is not None:
         if c_id is not None and c_id is not "":
             c = Context.objects.get(id=c_id)
