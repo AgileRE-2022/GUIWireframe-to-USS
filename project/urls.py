@@ -29,6 +29,9 @@ urlpatterns = [
             path('then', views.ctxThen, name="project_context_then"),
             path('athen', views.ctxAThen, name="project_context_athen"),
         ])),
+        path('scenario/', include([
+            path('add', views.addScenario, name="project_scenario_add"),
+        ])),
     ])),
     path('logout', views.logout, name="project_logout")
 ]

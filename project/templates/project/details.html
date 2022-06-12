@@ -54,7 +54,7 @@
     {% comment %} context {% endcomment %}
 </div>
 <div class="row mt-2">
-    <button class="col-12 btn btn-primary">Add Scenario</button>
+    <button class="col-12 btn btn-primary" data-bs-toggle="modal" data-bs-target="#modalScenario">Add Scenario</button>
     <div class="card my-4" style="">
         <div class="card-header h4">Scenario : bla bla bla
         </div>
@@ -101,6 +101,8 @@
 {% include 'project/component/modalCtxWhen.html' %}
 {% comment %} Then {% endcomment %}
 {% include 'project/component/modalCtxThen.html' %}
+{% comment %} Modal Scenario {% endcomment %}
+{% include 'project/component/modalScenario.html' %}
 {% endblock modal %}
 {% block js %}
 <script>
@@ -122,4 +124,5 @@
 {% include 'project/component/jsCtxWhen.html' %}
 {% include 'project/component/jsCtxAltThen.html' %}
 {% include 'project/component/jsCtxThen.html' %}
+{% include 'project/component/jsModalScenario.html' %}
 {% endblock js %}

@@ -1,0 +1,181 @@
+<div class="modal fade" id="modalScenario" tabindex="-1" aria-labelledby="modalScenarioLabel"
+    aria-hidden="true">
+    <div class="modal-dialog modal-dialog-scrollable">
+        <form action="{% url 'project_scenario_add' request.session.project %}" class="modal-content" method="post">
+            {% csrf_token %}
+            <div class="modal-header">
+                <h5 class="modal-title" id="modalScenarioLabel">Add Scenario</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <div class="mb-3">
+                    <label for="inputScenario" class="form-label">Scenario</label>
+                    <input type="scenario" class="form-control" id="inputScenario" placeholder="the Scenario">
+                </div>
+                <div class="mb-3">
+                    <label for="" class="form-label">Given</label>
+                    <div class="row">
+                        <div class="col-4">
+                            <select class="form-select " name="given-template" aria-label="Default select example">
+                                <option value="im on url &lt;url&gt;" selected>
+                                    im on url
+                                </option>
+                                <option value="im on page &lt;page&gt;">
+                                    im on page
+                                </option>
+                            </select>
+                        </div>
+                        <div class="col-8">
+                            <input type="text" name="given-statement" class="form-control" placeholder="some url / page"
+                                id="inputScenario">
+                        </div>
+                    </div>
+                    <div id="" class="form-text mb-3">set for now, you can add/edit later</div>
+                </div>
+                <div class="mb-3">
+                    <label for="" class="form-label">When</label>
+                    <div class="row">
+                        <div class="col-12">
+                            <select class="form-select when-select-template" name="when-template"
+                                aria-label="Default select example" onchange="whenListener()">
+                                <option value="I go to &lt;statement&gt;">
+                                    I go to &lt;page&gt;
+                                </option>
+                                <option value="I reload the page">
+                                    I reload the page
+                                </option>
+                                <option value="I move backward one page">
+                                    I move backward one page
+                                </option>
+                                <!-- <option value="I move forward one page">I move forward one page</option> -->
+                                <option value="I press &lt;component&gt;">
+                                    I press &lt;button&gt;
+                                </option>
+                                <!-- <option value="I follow &lt;link&gt;">I follow &lt;link&gt;</option> -->
+                                <option value="I fill in &lt;component&gt; with &lt;statement&gt;" selected>
+                                    I fill in &lt;field&gt; with &lt;value&gt;
+                                </option>
+                                <!-- <option value="I fill in &lt;component&gt; with:">I fill in &lt;field&gt; with:</option> -->
+                                <option value="I fill in &lt;statement&gt; for &lt;component&gt;">
+                                    I fill in &lt;value&gt; for &lt;field&gt;
+                                </option>
+                                <!-- <option value="I fill in the following:">I fill in the following:</option> -->
+                                <option value="I select &lt;statement&gt; from &lt;component&gt;">
+                                    I select &lt;option&gt; from &lt;dropdown&gt;
+                                </option>
+                                <!-- <option value="I additionally select &lt;option&gt; from &lt;select&gt;">I additionally select &lt;option&gt; from &lt;select&gt;</option> -->
+                                <option value="I check &lt;component&gt;">
+                                    I check &lt;checkbox&gt;
+                                </option>
+                                <option value="I uncheck &lt;component&gt;">
+                                    I uncheck &lt;checkbox&gt;
+                                </option>
+                                <!-- <option value="I attach the file &lt;path&gt; to &lt;field&gt;">I attach the file &lt;path&gt; to &lt;field&gt;</option> -->
+                            </select>
+                        </div>
+                        <div id="" class="form-text mb-3">set for now, you can add/edit later</div>
+                        {% comment %} select component {% endcomment %}
+                        <div class="col-1"></div>
+                        <div class="col-11">
+                            <select class="form-select mb-3 when-select-component" name="when-component"
+                                aria-label="Default select example">
+                                <option value="" selected disabled>
+                                    select component / element html
+                                </option>
+                                {% for comp in components %}
+                                <option value="{{ comp.id }}">
+                                    {{ comp.type_component }} {{ comp.value }}
+                                </option>
+                                {% endfor %}
+                            </select>
+                        </div>
+                        {% comment %} input statement {% endcomment %}
+                        <div class="col-1"></div>
+                        <div class="col-11 mb-3">
+                            <input type="text" name="when-statement" class="form-control when-statement"
+                                placeholder="some value" id="inputScenario">
+                        </div>
+                    </div>
+                </div>
+                <div class="mb-3">
+                    <label for="" class="form-label">Then</label>
+                    <div class="row">
+                        <div class="col-12">
+                            <select class="form-select then-select-template" name="then-template"
+                                aria-label="Default select example" onchange="thenListener()">
+                                <option value="Then I should be on &lt;statement&gt;">Then I should be on &lt;page&gt;
+                                </option>
+                                <option value="Then the url should match &lt;statement&gt;">Then the url should match
+                                    &lt;pattern&gt;</option>
+                                <option value="Then the response status code should be &lt;statement&gt;">Then the
+                                    response status code should be &lt;code&gt;</option>
+                                <option value="Then the response status code should not be &lt;statement&gt;">Then the
+                                    response status code should not be &lt;code&gt;</option>
+                                <option value="Then I should see &lt;statement&gt;">Then I should see &lt;text&gt;
+                                </option>
+                                <option value="Then I should not see &lt;statement&gt;">Then I should not see
+                                    &lt;text&gt;</option>
+                                <option value="Then I should see text matching &lt;statement&gt;">Then I should see text
+                                    matching &lt;pattern&gt;</option>
+                                <option value="Then I should not see text matching &lt;statement&gt;">Then I should not
+                                    see text matching &lt;pattern&gt;</option>
+                                <option value="Then the response should contain &lt;statement&gt;">Then the response
+                                    should contain &lt;text&gt;</option>
+                                <option value="Then the response should not contain &lt;statement&gt;">Then the response
+                                    should not contain &lt;text&gt;</option>
+                                <option value="Then I should see &lt;statement&gt; in the &lt;component&gt; element">
+                                    Then I should see &lt;text&gt; in the &lt;element&gt; element</option>
+                                <option
+                                    value="Then I should not see &lt;statement&gt; in the &lt;component&gt; element">
+                                    Then I should not see &lt;text&gt; in the &lt;element&gt; element</option>
+                                <option value="Then the &lt;component&gt; element should contain &lt;statement&gt;"
+                                    selected>Then
+                                    the &lt;element&gt; element should contain &lt;value&gt;</option>
+                                <option value="Then the &lt;component&gt; element should not contain &lt;statement&gt;">
+                                    Then the &lt;element&gt; element should not contain &lt;value&gt;</option>
+                                <option value="Then I should see an? &lt;component&gt; element">Then I should see an?
+                                    &lt;element&gt; element</option>
+                                <option value="Then I should not see an? &lt;component&gt; element">Then I should not
+                                    see an? &lt;element&gt; element</option>
+                                <option value="Then the &lt;component&gt; field should contain &lt;statement&gt;">Then
+                                    the &lt;field&gt; field should contain &lt;value&gt;</option>
+                                <option value="Then the &lt;component&gt; field should not contain &lt;statement&gt;">
+                                    Then the &lt;field&gt; field should not contain &lt;value&gt;</option>
+                                <option value="Then the &lt;component&gt; checkbox should be checked">Then the
+                                    &lt;checkbox&gt; checkbox should be checked</option>
+                                <option value="Then the &lt;component&gt; checkbox should not be checked">Then the
+                                    &lt;checkbox&gt; checkbox should not be checked</option>
+                            </select>
+                        </div>
+                        <div id="" class="form-text mb-3">set for now, you can add/edit later</div>
+                        {% comment %} select component {% endcomment %}
+                        <div class="col-1"></div>
+                        <div class="col-11">
+                            <select class="form-select mb-3 then-select-component" name="then-component"
+                                aria-label="Default select example">
+                                <option value="" selected disabled>
+                                    select component / element html
+                                </option>
+                                {% for comp in components %}
+                                <option value="{{ comp.id }}">
+                                    {{ comp.type_component }} {{ comp.value }}
+                                </option>
+                                {% endfor %}
+                            </select>
+                        </div>
+                        {% comment %} input statement {% endcomment %}
+                        <div class="col-1"></div>
+                        <div class="col-11">
+                            <input type="text" name="then-statement" class="form-control then-statement"
+                                placeholder="some value" id="inputScenario">
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-danger" data-bs-dismiss="modal">Cancel</button>
+                <button type="submit" class="btn btn-primary" id="when-submit-btn">Save</button>
+            </div>
+        </form>
+    </div>
+</div>

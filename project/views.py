@@ -5,7 +5,7 @@ from django.views.decorators.csrf import csrf_protect
 from django.template.response import TemplateResponse
 import uuid
 
-from .models import Context, Wireframe, Rules, Activity
+from .models import Context, Wireframe
 from .functions.compdetector import *
 from .middleware import isGuest
 
@@ -85,8 +85,6 @@ def details(request, id):
     template = "project/details.html"
     args['wireframe'] = Wireframe.objects.get(id=id)
     args['components'] = Component.objects.filter(wireframe_id=id)
-    args['activities'] = Activity.objects.filter(wireframe_id=id)
-    #args['rules'] = Rules.objects.filter(wireframe_id=id)
 
     ctx = {}
     ctx["given"] = Context.objects.filter(context_type="given")
@@ -366,4 +364,9 @@ def ctxAThen(request, id):
                 activity_id=activity,
             )
             c.save()
+    return redirect('project_details', request.session["project"])
+
+
+@csrf_protect
+def addScenario(request, id):
     return redirect('project_details', request.session["project"])
