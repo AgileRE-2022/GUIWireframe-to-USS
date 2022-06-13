@@ -475,5 +475,29 @@ def editScenario(request, id):
         elif edit_type == "delete-when":
             c = Context.objects.get(id=request.POST.get("s_id"))
             c.delete()
+        elif edit_type == "add-then":
+            c = Context(
+                context_type="then",
+                component_id=None,
+                context_statement=request.POST.get("then-statement"),
+                scenario_id=request.POST.get("s_id"),
+                context_template=request.POST.get("then-template"),
+            )
+            c.save()
+        elif edit_type == "edit-then":
+            then_component = request.POST.get("then-component")
+            then_statement = request.POST.get("then-statement")
+            if then_statement == "":
+                then_statement = None
+            if then_component == "":
+                then_component = None
+            c = Context.objects.get(id=request.POST.get("s_id"))
+            c.component_id = then_component
+            c.context_statement = then_statement
+            c.context_template = request.POST.get("then-template")
+            c.save()
+        elif edit_type == "delete-then":
+            c = Context.objects.get(id=request.POST.get("s_id"))
+            c.delete()
 
     return redirect('project_details', request.session["project"])

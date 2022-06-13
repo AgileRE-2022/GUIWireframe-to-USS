@@ -70,7 +70,7 @@
         })
     })
 
-    const optionComponent = whenModal.querySelectorAll('select.when-select-component option')
+    const optionComponentModalWhen = whenModal.querySelectorAll('select.when-select-component option')
 
 
     let whenListener = () => {
@@ -93,19 +93,19 @@
             selectComponent.appendChild(node)
 
             if (text.includes("<field>")) {
-                optionComponent.forEach(option => {
+                optionComponentModalWhen.forEach(option => {
                     if (option.text.includes("input_field")) {
                         selectComponent.appendChild(option)
                     }
                 });
             } else if (text.includes("<button>")) {
-                optionComponent.forEach(option => {
+                optionComponentModalWhen.forEach(option => {
                     if (option.text.includes("button")) {
                         selectComponent.appendChild(option)
                     }
                 });
             } else if (text.includes("<checkbox>")) {
-                optionComponent.forEach(option => {
+                optionComponentModalWhen.forEach(option => {
                     if (option.text.includes("checked_box")) {
                         selectComponent.appendChild(option)
                     } else if (option.text.includes("checked_radio")) {
@@ -113,13 +113,13 @@
                     }
                 });
             } else if (text.includes("<dropdown>")) {
-                optionComponent.forEach(option => {
+                optionComponentModalWhen.forEach(option => {
                     if (option.text.includes("droplist")) {
                         selectComponent.appendChild(option)
                     }
                 });
             } else {
-                optionComponent.forEach(option => {
+                optionComponentModalWhen.forEach(option => {
                     selectComponent.appendChild(option)
                 });
             }

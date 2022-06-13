@@ -1,39 +1,23 @@
-<div class="">
-    <ul class="list-group mb-3">
-        <li class="list-group-item list-group-item-primary d-flex justify-content-between align-items-center">
-            <strong class="">Then</strong>
-            <button data-bs-toggle="modal"
-                    data-bs-target="#ctxThenModal"
-                    id="add-ctx-then"
-                    class="ml-2 btn btn-primary">
-                Add
-            </button>
-        </li>
-        <ul class="list-group">
-            {% for t in context.then %}
-                <li class="list-group-item  d-flex justify-content-between align-items-center">
-                    <div class="">
-                        {{ t.activity.activity_name }}
-                        {% if t.activity.component_id is not None %}
-                            |
-                            {{ t.activity.comp.value }} —
-                            {{ t.activity.comp.type_component }}
-                        {% endif %}
-                    </div>
-                    <div class="">
-                        <button class="btn btn-warning edit-ctx-then"
-                                data-bs-toggle="modal"
-                                data-bs-target="#ctxThenModal"
-                                data-id="{{ t.id }}"
-                                data-activity="{{ t.activity_id }}">
-                            Edit
-                        </button>
-                        <button class="btn btn-danger delete-ctx-then"
-                                data-id="{{ t.id }}"
-                                data-activity="{{ t.activity_id }}">Delete</button>
-                    </div>
-                </li>
-            {% endfor %}
-        </ul>
-    </ul>
-</div>
+{% for then in scene.then %}
+    <p class="card-text">
+        <button class="btn btn-warning edit-ctx-then"
+                data-bs-toggle="modal"
+                data-bs-target="#modalContextThen"
+                data-id="{{ then.id }}"
+                data-statement="{{ then.context_statement }}"
+                data-template="{{ then.context_template }}"
+                data-component="{{ then.component_id }}">
+            EDIT
+        </button>
+        <button class="btn btn-danger delete-ctx-then"
+                data-id="{{ then.id }}"
+                {% if forloop.counter == 1 %}disabled{% endif %}>DELETE</button>
+        <span class="text-muted h5">
+            {% if forloop.counter == 1 %}
+                then
+            {% else %}
+                AND
+            {% endif %}
+        </span> {{ then.text }}
+    </p>
+{% endfor %}
