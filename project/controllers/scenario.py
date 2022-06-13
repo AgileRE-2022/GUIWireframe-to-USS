@@ -69,6 +69,9 @@ def editScenario(request, id):
             s = Scenario.objects.get(id=request.POST.get("s_id"))
             s.scenario_title = request.POST.get("scenario")
             s.save()
+        elif edit_type == "scenario-delete":
+            s = Scenario.objects.get(id=request.POST.get("s_id"))
+            s.delete()
         elif edit_type == "add-given":
             c = Context(
                 context_type="given",
