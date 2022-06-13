@@ -14,7 +14,7 @@
                 <li class="list-group-item  d-flex justify-content-between align-items-center">
                     <div class="">
                         {{ t.activity.activity_name }}
-                        {% if t.activity.component_id is not None %} |
+                        {% if t.activity.component_id != None %} |
                             {{ t.activity.comp.value }} —
                             {{ t.activity.comp.type_component }}
                         {% endif %}

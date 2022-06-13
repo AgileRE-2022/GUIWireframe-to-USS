@@ -2,7 +2,7 @@
     const modalScenario = document.querySelector('#modalScenario')
     const optionComponent = modalScenario.querySelectorAll('.when-select-component option')
 
-    let whenListener = () => {
+    let whenModalScenarioListener = () => {
         var select = modalScenario.querySelector('.when-select-template')
         var value = select.value
         var selectComponent = modalScenario.querySelector('.when-select-component')
@@ -74,7 +74,7 @@
         }
     }
 
-    let thenListener = () => {
+    let thenModalScenarioListener = () => {
         var select = modalScenario.querySelector('.then-select-template')
         var value = select.value
         var selectComponent = modalScenario.querySelector('.then-select-component')

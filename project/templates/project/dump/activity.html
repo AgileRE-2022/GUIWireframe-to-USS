@@ -12,7 +12,7 @@
             <tr>
                 <td>{{ activity.activity_name }}</td>
                 <td>
-                    {% if activity.component_id is not None %}
+                    {% if activity.component_id != None %}
                         {{ activity.comp.value }} —
                         {{ activity.comp.type_component }}
                     {% endif %}
