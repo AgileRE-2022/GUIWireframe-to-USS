@@ -7,6 +7,7 @@ urlpatterns = [
     path('create', views.create, name="project_create"),
     path('<int:id>/', include([
         path('', views.details, name="project_details"),
+        path('download/', views.download, name="project_download"),
         path('rules/', include([
             path('add', views.rulesAdd, name="project_rules_add"),
             path('<int:rid>', views.rulesEdit, name="project_rules_edit"),
