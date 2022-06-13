@@ -9,7 +9,8 @@
         <div class="col-12 col-lg-6 mb-2 mt-4">
             <div class="h3 mb-3">Wireframe</div>
             <div class="row mx-1">
-                <a href="{% url 'project_download' request.session.project %}" class="btn btn-primary">Export to User-Story Scenario</a>
+                <a href="{% url 'project_download' request.session.project %}"
+                   class="btn btn-primary">Export to User-Story Scenario</a>
                 <div class="col-6 mt-4 text-muted h6" style="white-space: pre-wrap;">{{ wireframe.project_file }}</div>
                 <div class="col-6 mt-4 justify-content-center align-items-center card">
                     <img src="#"
@@ -72,7 +73,10 @@
                                 data-scenario="{{ scene.scenario_title }}">
                             Edit Scenario
                         </button>
-                        <button class="btn btn-danger mx-2">Delete Scenario</button>
+                        <button class="btn btn-danger mx-2 scenario-delete-trigger"
+                                data-id="{{ scene.id }}">
+                            Delete Scenario
+                        </button>
                     </div>
                     <div class="mb-4">
                         <button class="btn btn-primary mx-2 add-ctx-given"

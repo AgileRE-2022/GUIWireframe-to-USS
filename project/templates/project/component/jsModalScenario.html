@@ -145,7 +145,18 @@
             var scene = btn.dataset.scenario
 
             modalScenarioEdit.querySelector('#s_id').value = id
+            modalScenarioEdit.querySelector('#edit_type').value = "scenario"
             modalScenarioEdit.querySelector('#inputScenario').value = scene
+        })
+    })
+
+    document.querySelectorAll('.scenario-delete-trigger').forEach(btn => {
+        btn.addEventListener('click', () => {
+            var id = btn.dataset.id
+
+            modalScenarioEdit.querySelector('#s_id').value = id
+            modalScenarioEdit.querySelector('#edit_type').value = "scenario-delete"
+            modalScenarioEdit.querySelector('#scenario-submit-btn').click()
         })
     })
 </script>
