@@ -48,5 +48,17 @@ class Context(models.Model):
             fcomp = fcomp.replace("<statement>", self.context_statement)
         if self.component_id != None and fcomp.find("<component>") >= 0:
             c = self.comp()
-            fcomp = fcomp.replace("<component>", c.type_component + " " + c.value)
+            fcomp = fcomp.replace(
+                "<component>", c.type_component + " " + c.value)
+        return fcomp
+
+    def uss(self):
+        fcomp = self.context_template
+        if self.context_statement != None and fcomp.find("<statement>") >= 0:
+            s = self.context_statement
+            fcomp = fcomp.replace("<statement>", "\"" +
+                                  self.context_statement+"\"")
+        if self.component_id != None and fcomp.find("<component>") >= 0:
+            c = self.comp()
+            fcomp = fcomp.replace("<component>", " \"" + c.value + "\"")
         return fcomp
