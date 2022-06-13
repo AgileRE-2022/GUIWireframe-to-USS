@@ -1,0 +1,7 @@
+Feature:
+    In order to <a>
+    As a <b>
+    I want to <c>
+
+    Scenario: <s>
+        <gwt>
