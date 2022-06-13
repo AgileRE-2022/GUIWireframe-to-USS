@@ -1,15 +1,29 @@
 {% comment %} belum seleasai {% endcomment %}
 <script>
-    const whenModal = document.querySelector('#ctxWhenModal') //get id
+    const whenModal = document.querySelector('#modalContextWhen') //get id
     document.querySelectorAll('.edit-ctx-when').forEach(btn => {
         btn.addEventListener('click', () => {
-            whenModal.querySelector('.modal-title').innerHTML = "Edit When"
-            whenModal.querySelector('.when-c_id').value = btn.dataset.id
-            whenModal.querySelector('.when-statement').value = btn.dataset.statement
+            whenModal.querySelector('.modal-title').innerHTML = "Edit When" //title
+            whenModal.querySelector('.when-edit-type').value = "edit-when" //id yang di edit 
+            whenModal.querySelector('.s_id').value = btn.dataset.id //
+            whenModal.querySelector('#when-input-statement').value = btn.dataset.statement
+
+            if (btn.dataset.statement == "None") {
+                whenModal.querySelector('#when-input-statement').style.display = "none"
+            } else {
+                whenModal.querySelector('#when-input-statement').style.display = "block"
+            }
+
+            if (btn.dataset.component == "None") {
+                whenModal.querySelector('select.when-select-component').style.display = "none"
+            } else {
+                whenModal.querySelector('select.when-select-component').style.display = "block"
+            }
+
             var selectedIndex = 0
             try {
-                whenModal.querySelectorAll('select.when-rule option').forEach(e => {
-                    if (e.value == btn.dataset.rule) {
+                whenModal.querySelectorAll('select.when-select-template option').forEach(e => {
+                    if (e.value == btn.dataset.template) {
                         throw 'Break'
                     }
                     selectedIndex++
@@ -17,28 +31,116 @@
             } catch (e) {
                 if (e !== 'Break') throw e
             }
-            whenModal.querySelector('select.when-rule').selectedIndex = selectedIndex
+            whenModal.querySelector('select.when-select-template').selectedIndex = selectedIndex
 
-            if (btn.dataset.conjunction == "is") {
-                whenModal.querySelector('select.when-conjunction').selectedIndex = 0
-            } else {
-                whenModal.querySelector('select.when-conjunction').selectedIndex = 1
+
+            if (btn.dataset.component != "None") {
+                var ms = 0
+                try {
+                    whenModal.querySelectorAll('select.when-select-component option').forEach(e => {
+                        if (e.value == btn.dataset.component) {
+                            throw 'Break'
+                        }
+                        ms++
+                    })
+                } catch (e) {
+                    if (e !== 'Break') throw e
+                }
+                whenModal.querySelector('select.when-select-component').selectedIndex = ms
             }
         })
     })
     //melakukan reset value yang sebelumnya dimanipulasi ketika memencet tombol Add
-    document.querySelector('#add-ctx-when').addEventListener('click', () => {
-        whenModal.querySelector('.modal-title').innerHTML = "Add When" //title
-        whenModal.querySelector('.when-c_id').value = null //id yang di edit 
-        whenModal.querySelector('.when-statement').value = null //edit statement
-        whenModal.querySelector('select').selectedIndex = 0 //sek bingung
+    document.querySelectorAll('.add-ctx-when').forEach(btn => {
+        btn.addEventListener('click', () => {
+            whenModal.querySelector('.modal-title').innerHTML = "Add When" //title
+            whenModal.querySelector('.when-edit-type').value = "add-when" //id yang di edit 
+            whenModal.querySelector('.s_id').value = btn.dataset.id //
+            whenModal.querySelector('#given-input-statement').value = null
+            whenModal.querySelector('select.when-select-template').selectedIndex = 0
+            whenModal.querySelector('select.when-select-component').selectedIndex = 0
+        })
     })
 
     document.querySelectorAll('.delete-ctx-when').forEach(btn => {
         btn.addEventListener('click', () => {
-            whenModal.querySelector('.when-c_id').value = btn.dataset.id //id yang di edit 
-            whenModal.querySelector('.when-delete').value = "true" //id yang di edit 
+            whenModal.querySelector('.when-edit-type').value = "delete-when" //id yang di edit 
+            whenModal.querySelector('.s_id').value = btn.dataset.id //
             whenModal.querySelector('#when-submit-btn').click()
         })
     })
+
+    const optionComponent = whenModal.querySelectorAll('select.when-select-component option')
+
+
+    let whenListener = () => {
+        var select = whenModal.querySelector('.when-select-template')
+        var value = select.value
+        var selectComponent = whenModal.querySelector('.when-select-component')
+        if (!value.includes("<component>")) {
+            selectComponent.style.display = "none"
+        } else {
+            selectComponent.style.display = "block"
+            var text = select.options[select.selectedIndex].text
+            selectComponent.innerHTML = ""
+            selectComponent.removeAttribute("disabled")
+
+            var node = document.createElement("option")
+            node.setAttribute("selected", "true")
+            node.setAttribute("disabled", "true")
+            node.setAttribute("value", "")
+            node.innerHTML = "Select Element"
+            selectComponent.appendChild(node)
+
+            if (text.includes("<field>")) {
+                optionComponent.forEach(option => {
+                    if (option.text.includes("input_field")) {
+                        selectComponent.appendChild(option)
+                    }
+                });
+            } else if (text.includes("<button>")) {
+                optionComponent.forEach(option => {
+                    if (option.text.includes("button")) {
+                        selectComponent.appendChild(option)
+                    }
+                });
+            } else if (text.includes("<checkbox>")) {
+                optionComponent.forEach(option => {
+                    if (option.text.includes("checked_box")) {
+                        selectComponent.appendChild(option)
+                    } else if (option.text.includes("checked_radio")) {
+                        selectComponent.appendChild(option)
+                    }
+                });
+            } else if (text.includes("<dropdown>")) {
+                optionComponent.forEach(option => {
+                    if (option.text.includes("droplist")) {
+                        selectComponent.appendChild(option)
+                    }
+                });
+            } else {
+                optionComponent.forEach(option => {
+                    selectComponent.appendChild(option)
+                });
+            }
+
+            if (selectComponent.options.length == 1) {
+                var node = document.createElement("option")
+                node.setAttribute("selected", "true")
+                node.setAttribute("disabled", "true")
+                node.setAttribute("value", "")
+                node.innerHTML = "you dont have option, please select other"
+                selectComponent.innerHTML = ""
+                selectComponent.appendChild(node)
+                selectComponent.setAttribute("disabled", "true")
+            }
+            selectComponent.selectedIndex = 0
+        }
+
+        if (!value.includes("<statement>")) {
+            whenModal.querySelector('.when-statement').style.display = "none"
+        } else {
+            whenModal.querySelector('.when-statement').style.display = "block"
+        }
+    }
 </script>

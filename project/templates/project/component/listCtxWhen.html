@@ -1,33 +1,23 @@
-<ul class="list-group mb-3">
-    <li class="list-group-item list-group-item-primary d-flex justify-content-between align-items-center">
-        <strong class="">When</strong>
-        <button data-bs-toggle="modal"
-                data-bs-target="#ctxWhenModal"
-                id="add-ctx-when"
-                class="ml-2 btn btn-primary">
-            Add
+{% for when in scene.when %}
+    <p class="card-text">
+        <button class="btn btn-warning edit-ctx-when"
+                data-bs-toggle="modal"
+                data-bs-target="#modalContextWhen"
+                data-id="{{ when.id }}"
+                data-statement="{{ when.context_statement }}"
+                data-template="{{ when.context_template }}"
+                data-component="{{ when.component_id }}">
+            EDIT
         </button>
-    </li>
-    <ul class="list-group">
-        {% for wh in context.when %}
-            <li class="list-group-item  d-flex justify-content-between align-items-center">
-                <div class="">
-                    {{ wh.rule.rules_desc }} | {{ wh.rule.comp.value }} | {{ wh.rule.comp.type_component }}
-                    {{ wh.context_conjunction }} {{ wh.context_statement }}
-                </div>
-                <div class="">
-                    <button class="btn btn-warning edit-ctx-when"
-                            data-bs-toggle="modal"
-                            data-bs-target="#ctxWhenModal"
-                            data-id="{{ wh.id }}"
-                            data-rule="{{ wh.rule_id }}"
-                            data-conjunction="{{ wh.context_conjunction }}"
-                            data-statement="{{ wh.context_statement }}">
-                        Edit
-                    </button>
-                    <button class="btn btn-danger delete-ctx-when" data-id="{{ wh.id }}">Delete</button>
-                </div>
-            </li>
-        {% endfor %}
-    </ul>
-</ul>
+        <button class="btn btn-danger delete-ctx-when"
+                data-id="{{ when.id }}"
+                {% if forloop.counter == 1 %}disabled{% endif %}>DELETE</button>
+        <span class="text-muted h5">
+            {% if forloop.counter == 1 %}
+                WHEN
+            {% else %}
+                AND
+            {% endif %}
+        </span> {{ when.text }}
+    </p>
+{% endfor %}

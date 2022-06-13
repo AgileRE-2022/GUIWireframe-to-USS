@@ -445,13 +445,34 @@ def editScenario(request, id):
             c.save()
         elif edit_type == "edit-given":
             c = Context.objects.get(id=request.POST.get("s_id"))
-            print(c)
-            print(request.POST.get("given-statement"))
-            print(request.POST.get("given-template"))
             c.context_statement = request.POST.get("given-statement")
             c.context_template = request.POST.get("given-template")
             c.save()
         elif edit_type == "delete-given":
+            c = Context.objects.get(id=request.POST.get("s_id"))
+            c.delete()
+        elif edit_type == "add-when":
+            c = Context(
+                context_type="when",
+                component_id=None,
+                context_statement=request.POST.get("when-statement"),
+                scenario_id=request.POST.get("s_id"),
+                context_template=request.POST.get("when-template"),
+            )
+            c.save()
+        elif edit_type == "edit-when":
+            when_component = request.POST.get("when-component")
+            when_statement = request.POST.get("when-statement")
+            if when_statement == "":
+                when_statement = None
+            if when_component == "":
+                when_component = None
+            c = Context.objects.get(id=request.POST.get("s_id"))
+            c.component_id = when_component
+            c.context_statement = when_statement
+            c.context_template = request.POST.get("when-template")
+            c.save()
+        elif edit_type == "delete-when":
             c = Context.objects.get(id=request.POST.get("s_id"))
             c.delete()
 

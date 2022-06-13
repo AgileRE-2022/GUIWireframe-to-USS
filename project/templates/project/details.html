@@ -81,56 +81,23 @@
                                 data-id="{{ scene.id }}">
                             Add Given
                         </button>
-                        <button class="btn btn-primary mx-2">Add When</button>
+                        <button class="btn btn-primary mx-2 add-ctx-when"
+                                data-bs-toggle="modal"
+                                data-bs-target="#modalContextWhen"
+                                data-id="{{ scene.id }}">
+                            Add When
+                        </button>
                         <button class="btn btn-primary mx-2">Add Then</button>
                     </div>
-                    {% for given in scene.given %}
-                        <p class="card-text">
-                            <button class="btn btn-warning edit-ctx-given"
-                                    data-bs-toggle="modal"
-                                    data-bs-target="#modalContextGiven"
-                                    data-id="{{ given.id }}"
-                                    data-statement="{{ given.context_statement }}"
-                                    data-template="{{ given.context_template }}">
-                                EDIT
-                            </button>
-                            <button class="btn btn-danger delete-ctx-given"
-                                    data-id="{{ given.id }}"
-                                    {% if forloop.counter == 1 %}disabled{% endif %}>
-                                DELETE
-                            </button>
-                            <span class="text-muted h5">
-                                {% if forloop.counter == 1 %}
-                                    GIVEN
-                                {% else %}
-                                    AND
-                                {% endif %}
-                            </span> {{ given.text }}
-                        </p>
-                    {% endfor %}
-                    {% for when in scene.when %}
+                    {% comment %} given {% endcomment %}
+                    {% include 'project/component/listCtxGiven.html' %}
+                    {% comment %} when {% endcomment %}
+                    {% include 'project/component/listCtxWhen.html' %}
+                    {% for then in scene.then %}
                         <p class="card-text">
                             <button class="btn btn-warning">EDIT</button>
                             <button class="btn btn-danger"
                                     {% if forloop.counter == 1 %}disabled{% endif %}>DELETE</button>
-                            <span class="text-muted h5">
-                                {% if forloop.counter == 1 %}
-                                    WHEN
-                                {% else %}
-                                    AND
-                                {% endif %}
-                            </span> {{ when.text }}
-                        </p>
-                    {% endfor %}
-                    {% for then in scene.then %}
-                        <p class="card-text">
-                            <button class="btn btn-warning">
-                                EDIT
-                            </button>
-                            <button class="btn btn-danger"
-                                    {% if forloop.counter == 1 %}disabled{% endif %}>
-                                DELETE
-                            </button>
                             <span class="text-muted h5">
                                 {% if forloop.counter == 1 %}
                                     then
@@ -173,7 +140,7 @@
     imageSALT.setAttribute('src', 'http://www.plantuml.com/plantuml/png/' + compress(saltSyntax))
     </script>
     {% include 'project/component/jsCtxGiven.html' %}
-    {% comment %} {% include 'project/component/jsCtxWhen.html' %}
-    {% include 'project/component/jsCtxThen.html' %} {% endcomment %}
+    {% include 'project/component/jsCtxWhen.html' %}
+    {% comment %} {% include 'project/component/jsCtxThen.html' %} {% endcomment %}
     {% include 'project/component/jsModalScenario.html' %}
 {% endblock js %}
