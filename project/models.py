@@ -29,6 +29,7 @@ class Component(models.Model):
     type_component = models.CharField(max_length=200)
     value = models.CharField(max_length=200)
     wireframe_id = models.CharField(max_length=200)
+    inner = models.CharField(max_length=200, null=True)
 
 
 class Context(models.Model):
@@ -60,5 +61,5 @@ class Context(models.Model):
                                   self.context_statement+"\"")
         if self.component_id != None and fcomp.find("<component>") >= 0:
             c = self.comp()
-            fcomp = fcomp.replace("<component>", " \"" + c.value + "\"")
+            fcomp = fcomp.replace("<component>", " \"" + c.inner + "\"")
         return fcomp

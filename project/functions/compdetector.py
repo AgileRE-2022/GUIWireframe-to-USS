@@ -1,11 +1,6 @@
 from ..models import Component
 import numpy as np
 
-# notepad = open('saltcomponent.txt','r')
-# text = notepad.read()
-
-# text1   = text.splitlines()
-
 # Menghapus Whitespace di depan
 def bersih(salt):
     index   = [0,1, len(salt)-1, len(salt)-2]
@@ -24,6 +19,20 @@ def bersih(salt):
         s[i] = s[i].replace("\t","")
     return s
 
+def cleanFirst(baris):
+    con = True
+    inc = 0
+    while con:
+        if baris[inc] == " ":            
+            inc+=1
+        else :
+            con = False
+    baris = baris[inc:len(baris)]
+    baris = baris.replace("\r","")
+    baris = baris.replace("\n","")
+    baris = baris.replace("\t","")
+    return baris
+
 def checkbox(salt, id):
     ubox = "[]"
     cbox = "[X]"    
@@ -32,15 +41,18 @@ def checkbox(salt, id):
         if ubox in salt[i]:
             print("Unchecked Box found")
             print(salt[i])
-            ubox = salt[i].replace(ubox,"")
-            db = Component(type_component="unchecked_box",value=salt[i],wireframe_id=id)
+            ubox = salt[i].replace("[","")
+            mInner = ubox.replace("]","")
+            mInner = cleanFirst(mInner)
+            db = Component(type_component="unchecked_box",value=salt[i],wireframe_id=id, inner=mInner)
             db.save()
         # Deteksi Checked Box
         elif cbox in salt[i]:
             print("Checked Box found")
             print(salt[i])
             cbox = salt[i].replace(cbox,"")
-            db = Component(type_component="checked_box",value=salt[i],wireframe_id=id)
+            mInner = cleanFirst(cbox)
+            db = Component(type_component="checked_box",value=salt[i],wireframe_id=id, inner=mInner)
             db.save()
             
 def radio(salt, id):
@@ -51,15 +63,18 @@ def radio(salt, id):
         if cradio in salt[i]:
             print("Checked-Radio found :")
             print(salt[i])
-            ubox = salt[i].replace(cradio ,"")
-            db = Component(type_component="checked_radio",value=salt[i],wireframe_id=id)
+            ubox = salt[i].replace("(" ,"")
+            ubox = ubox.replace(")" ,"")
+            mInner = cleanFirst(ubox)
+            db = Component(type_component="checked_radio",value=salt[i],wireframe_id=id, inner=mInner)
             db.save()
         # Deteksi Checked Radio
         elif uradio in salt[i]:
             print("Unchecked-Radio found :")
             print(salt[i])
             cbox = salt[i].replace(uradio,"")
-            db = Component(type_component="unchecked_radio",value=salt[i],wireframe_id=id)
+            mInner = cleanFirst(cbox)
+            db = Component(type_component="unchecked_radio",value=salt[i],wireframe_id=id, inner=mInner)
             db.save()
             
 def droplist(salt, id):
@@ -70,7 +85,8 @@ def droplist(salt, id):
             print("Droplist found")
             print(salt[i])
             dl = salt[i].replace(dl,"")
-            db = Component(type_component="droplist",value=salt[i],wireframe_id=id)
+            mInner = cleanFirst(dl)
+            db = Component(type_component="droplist",value=salt[i],wireframe_id=id, inner=mInner)
             db.save()
 
 def strings(salt, id):
@@ -80,7 +96,7 @@ def strings(salt, id):
         if teks.isalnum():
             print("Text found")
             print(salt[i])
-            db = Component(type_component="strings",value=salt[i],wireframe_id=id)
+            db = Component(type_component="strings",value=salt[i],wireframe_id=id, inner=salt[i])
             db.save()
 
 def inputfield(salt, id):
@@ -91,7 +107,8 @@ def inputfield(salt, id):
             print("Form Field found")
             print(salt[i])
             ta = salt[i].replace(ta,"")
-            db = Component(type_component="input_field",value=salt[i],wireframe_id=id)
+            mInner = cleanFirst(ta)
+            db = Component(type_component="input_field",value=salt[i],wireframe_id=id, inner=mInner)
             db.save()
             
 def button(salt, id):
@@ -102,7 +119,10 @@ def button(salt, id):
         if fi == salt[i][0] and la == salt[i][len(salt[i])-1]:
             print("Button found")
             print(salt[i])
-            db = Component(type_component="button",value=salt[i],wireframe_id=id)
+            btn = salt[i].replace("[","")
+            btn = btn.replace("]","")
+            mInner = cleanFirst(btn)
+            db = Component(type_component="button",value=salt[i],wireframe_id=id, inner=mInner)
             db.save()
 
 def inspectcomp(salt, id):
