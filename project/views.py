@@ -424,3 +424,35 @@ def addScenario(request, id):
         t.save()
 
     return redirect('project_details', request.session["project"])
+
+
+@csrf_protect
+def editScenario(request, id):
+    if request.method == "POST":
+        edit_type = request.POST.get("edit_type")
+        if edit_type == "scenario":
+            s = Scenario.objects.get(id=request.POST.get("s_id"))
+            s.scenario_title = request.POST.get("scenario")
+            s.save()
+        elif edit_type == "add-given":
+            c = Context(
+                context_type="given",
+                component_id=None,
+                context_statement=request.POST.get("given-statement"),
+                scenario_id=request.POST.get("s_id"),
+                context_template=request.POST.get("given-template"),
+            )
+            c.save()
+        elif edit_type == "edit-given":
+            c = Context.objects.get(id=request.POST.get("s_id"))
+            print(c)
+            print(request.POST.get("given-statement"))
+            print(request.POST.get("given-template"))
+            c.context_statement = request.POST.get("given-statement")
+            c.context_template = request.POST.get("given-template")
+            c.save()
+        elif edit_type == "delete-given":
+            c = Context.objects.get(id=request.POST.get("s_id"))
+            c.delete()
+
+    return redirect('project_details', request.session["project"])

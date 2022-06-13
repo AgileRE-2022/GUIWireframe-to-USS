@@ -1,39 +1,40 @@
 <script>
-    const givenModal = document.querySelector('#ctxGivenModal') //get id
+    const givenModal = document.querySelector('#modalContextGiven') //get id
     document.querySelectorAll('.edit-ctx-given').forEach(btn => {
         btn.addEventListener('click', () => {
-            givenModal.querySelector('.modal-title').innerHTML = "Edit Given"
-            givenModal.querySelector('.given-c_id').value = btn.dataset.id
-            givenModal.querySelector('.given-statement').value = btn.dataset.statement //dirubah
+            givenModal.querySelector('.modal-title').innerHTML = "Edit Given" //title
+            givenModal.querySelector('.given-edit-type').value = "edit-given" //id yang di edit 
+            givenModal.querySelector('.s_id').value = btn.dataset.id //
+            givenModal.querySelector('#given-input-statement').value = btn.dataset.statement
+
             var selectedIndex = 0
-            if (btn.dataset.component == "None") {
-                selectedIndex = 1
-            } else {
-                try {
-                    givenModal.querySelectorAll('option').forEach(e => {
-                        if (e.value == btn.dataset.component) {
-                            throw 'Break'
-                        }
-                        selectedIndex++
-                    })
-                } catch (e) {
-                    if (e !== 'Break') throw e
-                }
+            try {
+                givenModal.querySelectorAll('option').forEach(e => {
+                    if (e.value == btn.dataset.template) {
+                        throw 'Break'
+                    }
+                    selectedIndex++
+                })
+            } catch (e) {
+                if (e !== 'Break') throw e
             }
             givenModal.querySelector('select').selectedIndex = selectedIndex
         })
     })
     document.querySelectorAll('.delete-ctx-given').forEach(btn => {
         btn.addEventListener('click', () => {
-            givenModal.querySelector('.given-c_id').value = btn.dataset.id
-            givenModal.querySelector('.given-delete').value = "true"
-            givenModal.querySelector('.given-submit-btn').click()
+            givenModal.querySelector('.given-edit-type').value = "delete-given" //id yang di edit 
+            givenModal.querySelector('.s_id').value = btn.dataset.id //
+            givenModal.querySelector('#given-submit-btn').click()
         })
     })
-    document.querySelector('#add-ctx-given').addEventListener('click', () => {
-        givenModal.querySelector('.modal-title').innerHTML = "Add Given" //title
-        givenModal.querySelector('.given-c_id').value = null //id yang di edit 
-        givenModal.querySelector('.given-statement').value = null //
-        givenModal.querySelector('select').selectedIndex = 0
+    document.querySelectorAll('.add-ctx-given').forEach(btn => {
+        btn.addEventListener('click', () => {
+            givenModal.querySelector('.modal-title').innerHTML = "Add Given" //title
+            givenModal.querySelector('.given-edit-type').value = "add-given" //id yang di edit 
+            givenModal.querySelector('.s_id').value = btn.dataset.id //
+            givenModal.querySelector('#given-input-statement').value = null
+            givenModal.querySelector('select').selectedIndex = 0
+        })
     })
-    </script>
+</script>

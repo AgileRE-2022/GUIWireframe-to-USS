@@ -136,4 +136,16 @@
             modalScenario.querySelector('.then-statement').value = null
         }
     }
+
+    const modalScenarioEdit = document.querySelector('#modalScenarioEdit')
+
+    document.querySelectorAll('.scenario-edit-trigger').forEach(btn => {
+        btn.addEventListener('click', () => {
+            var id = btn.dataset.id
+            var scene = btn.dataset.scenario
+
+            modalScenarioEdit.querySelector('#s_id').value = id
+            modalScenarioEdit.querySelector('#inputScenario').value = scene
+        })
+    })
 </script>

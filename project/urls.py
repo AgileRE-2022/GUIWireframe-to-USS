@@ -31,6 +31,7 @@ urlpatterns = [
         ])),
         path('scenario/', include([
             path('add', views.addScenario, name="project_scenario_add"),
+            path('edit', views.editScenario, name="project_scenario_edit"),
         ])),
     ])),
     path('logout', views.logout, name="project_logout")
