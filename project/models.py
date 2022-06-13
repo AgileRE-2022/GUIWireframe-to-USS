@@ -61,5 +61,5 @@ class Context(models.Model):
                                   self.context_statement+"\"")
         if self.component_id != None and fcomp.find("<component>") >= 0:
             c = self.comp()
-            fcomp = fcomp.replace("<component>", " \"" + c.inner + "\"")
+            fcomp = fcomp.replace("<component>", "\"" + c.inner + "\"")
         return fcomp
