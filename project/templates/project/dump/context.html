@@ -1,0 +1,15 @@
+<div class="col-12 col-lg-6 mb-2 mt-3">
+    {% comment %} Context {% endcomment %}
+    <div class="h3">Context</div>
+    {% comment %} given {% endcomment %}
+    {% include "project/component/listCtxGiven.html" %}
+    {% comment %} when {% endcomment %}
+    {% include "project/component/listCtxWhen.html" %}
+    {% comment %} then {% endcomment %}
+    {% include "project/component/listCtxThen.html" %}
+    {% comment %} alt-then {% endcomment %}
+    {% include "project/component/listCtxAltThen.html" %}
+    <a href="{% url 'project_context' request.session.project %}"
+       class="btn btn-primary mt-3">Halaman Lama
+    Context</a>
+</div>

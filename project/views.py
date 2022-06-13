@@ -1,377 +1,87 @@
 from django.http import HttpResponse
 from django.template.response import TemplateResponse
-from django.shortcuts import redirect
 from django.views.decorators.csrf import csrf_protect
-from django.template.response import TemplateResponse
-import uuid
 
-from .models import Context, Wireframe, Rules, Activity
+import mimetypes
+import os
+
+from .models import Scenario, Wireframe
 from .functions.compdetector import *
-from .middleware import isGuest
+
+from .controllers.auth import *
+from .controllers.wireframe import *
+from .controllers.scenario import *
 
 
-@csrf_protect
-def index(request):
-    args = {}
+def download(request, id):
+    # Define Django project base directory
+    BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+    # Define text file name
+    filenametemp = 'usstemp.txt'
+    filename = 'uss.feature'
+    # Define the full file path
+    filepathtemp = BASE_DIR + '/project/functions/' + filenametemp  # template
+    filepath = BASE_DIR + '/project/functions/' + filename  # ini yang di download
 
-    if not isGuest(request):
-        return redirect('project_details', request.session["project"])
+    # disini ambil variabel, trs write file
+    wireframe = Wireframe.objects.get(id=id)
+    scenario = Scenario.objects.filter(wireframe_id=id)
 
-    if request.method == "POST":
-        w = Wireframe.objects.get(id=request.POST.get("id"))
-        if w.project_password == request.POST.get("password"):
-            request.session["project"] = w.id
-            request.session["project_name"] = w.project_name
-            return redirect('project_details', w.id)
+    file1 = open(filepathtemp, "r")
+    text = file1.read()
+    a = "\tIn order to " + wireframe.project_us_purpose
+    b = "\tAs a " + wireframe.project_us_user
+    c = "\tI want to " + wireframe.project_us_todo
 
-    template = 'project/index.html'
-    args['projects'] = Wireframe.objects.all()
-    return TemplateResponse(request, template, args)
-
-
-def logout(request):
-    try:
-        del request.session["project"]
-        del request.session["project_name"]
-    except KeyError:
-        pass
-    return redirect('project_list')
-
-
-@csrf_protect
-def create(request):
-    if not isGuest(request):
-        return redirect('project_details', request.session["project"])
-
-    if request.method == 'POST':
-        # Validate Input Here
-        name = request.POST.get('project_name')
-        password = request.POST.get('project_password')
-        filecontent = ""
-        if request.FILES['file']:
-            file = request.FILES['file']
-            print("nama file : " + file.name)
-            # validator plant UML
-            filename = file.name
-            tipeFile = ["plantuml", "PU", "puml"]
-            if filename.split('.')[-1] in tipeFile:
-                print('is plant UML')
-                arr = []
-                for line in file:
-                    filecontent += line.decode("utf-8")
-                    arr.append(line.decode("utf-8"))
-                print(arr)
-
-                w = Wireframe(
-                    project_name=name,
-                    project_password=password,
-                    project_file=filecontent,
-                    project_uid=str(uuid.uuid4()))
-                w.save()
-
-                arrbersih = bersih(arr)
-                print(arrbersih)
-                inspectcomp(arrbersih, w.id)
+    text = text.replace('<a>', a)
+    text = text.replace('<b>', b)
+    text = text.replace('<c>', c)
+    p = ""
+    for scene in scenario:
+        s = "\tScenario: " + scene.scenario_title + "\n"
+        p += s
+        c = 1
+        for given in scene.given():
+            if c == 1:
+                g = "Given "
             else:
-                print('!= plant UML')
-
-        return redirect('project_list')
-    else:
-        args = {}
-        template = 'project/create.html'
-        return TemplateResponse(request, template, args)
-
-
-@csrf_protect
-def details(request, id):
-    if isGuest(request):
-        return redirect('project_list')
-    elif request.session["project"] != id:
-        return redirect('project_list')
-
-    args = {}
-    template = "project/details.html"
-    args['wireframe'] = Wireframe.objects.get(id=id)
-    args['components'] = Component.objects.filter(wireframe_id=id)
-    args['activities'] = Activity.objects.filter(wireframe_id=id)
-    #args['rules'] = Rules.objects.filter(wireframe_id=id)
-
-    ctx = {}
-    ctx["given"] = Context.objects.filter(context_type="given")
-    ctx["athen"] = Context.objects.filter(context_type="alt-then")
-    ctx["when"] = Context.objects.filter(context_type="when")
-    ctx["then"] = Context.objects.filter(context_type="then")
-
-    args["context"] = ctx
-    return TemplateResponse(request, template, args)
-
-
-@csrf_protect
-def rulesAdd(request, id):
-    if isGuest(request):
-        return redirect('project_list')
-    elif request.session["project"] != id:
-        return redirect('project_list')
-
-    args = {}
-    args['components'] = Component.objects.filter(wireframe_id=id)
-
-    if request.method == 'POST':
-        rule = request.POST.get("rule")
-        select = request.POST.get("select")
-        if rule != "":
-            print("nama rules adalah: " + rule)
-            r = Rules(rules_desc=rule, component_id=int(select))
-            r.save()
-            return redirect('project_details', id)
-        else:
-            print("isilah dengan benar")
-
-    template = 'project/rules.html'
-    return TemplateResponse(request, template, args)
-
-
-@csrf_protect
-def rulesEdit(request, id, rid):
-    if isGuest(request):
-        return redirect('project_list')
-    elif request.session["project"] != id:
-        return redirect('project_list')
-
-    rules = Rules.objects.get(id=rid)
-    args = {}
-    args['components'] = Component.objects.filter(wireframe_id=id)
-
-    if request.method == 'POST':
-        rules.rules_desc = request.POST.get("rule")
-        rules.component_id = request.POST.get("select")
-        rules.save()
-        return redirect('project_details', id)
-
-    elif request.method == 'DELETE':
-        print('Delete dijalankan')
-        rules.delete()
-        return redirect('project_details', id)
-
-    template = 'project/rulesEdit.html'
-    args['rule'] = rules
-
-    return TemplateResponse(request, template, args)
-
-
-def rulesDelete(request, id, del_id):
-    if isGuest(request):
-        return redirect('project_list')
-    elif request.session["project"] != id:
-        return redirect('project_list')
-
-    rules_del = Rules.objects.get(id=del_id)
-    rules_del.delete()
-    return redirect('project_details', 1)
-
-
-@csrf_protect
-def activityAdd(request, id):
-    if isGuest(request):
-        return redirect('project_list')
-    elif request.session["project"] != id:
-        return redirect('project_list')
-
-    args = {}
-    args['components'] = Component.objects.filter(wireframe_id=id)
-
-    if request.method == 'POST':
-        name = request.POST.get("Activity_name")
-        component = request.POST.get("Component")
-        if name != None and component != None:
-            # print("nama Activity "+ name +" dengan komponen yang di pilih : " + component)
-            ac = Activity(wireframe_id=id, activity_name=name)
-            if component != "":
-                ac.component_id = int(component)
-            ac.save()
-            return redirect('project_details', id)
-        else:
-            print("silahkan mengisi dengan benar")
-
-    template = 'project/ActivityAdd.html'
-    return TemplateResponse(request, template, args)
-
-
-@csrf_protect
-def activityEdit(request, id, aid):
-    if isGuest(request):
-        return redirect('project_list')
-    elif request.session["project"] != id:
-        return redirect('project_list')
-
-    args = {}
-    args['components'] = Component.objects.filter(wireframe_id=id)
-    act = Activity.objects.get(id=aid)
-
-    if request.method == 'POST':
-        act_name = request.POST.get("Activity_name")
-        act_compo = request.POST.get("Component")
-        act.activity_name = act_name
-
-        if act_compo != "":
-            act.component_id = act_compo
-        else:
-            act.component_id = None
-
-        act.save()
-        return redirect('project_details', id)
-
-    template = 'project/ActivityEdit.html'
-    args['act'] = act
-    return TemplateResponse(request, template, args)
-
-
-def activityDelete(request, id, del_id):
-    if isGuest(request):
-        return redirect('project_list')
-    elif request.session["project"] != id:
-        return redirect('project_list')
-
-    act_del = Activity.objects.get(id=del_id)
-    act_del.delete()
-    return redirect('project_details', 1)
-
-
-@csrf_protect
-def context(request, id):
-    args = {}
-    template = 'project/context.html'
-    return TemplateResponse(request, template, args)
-
-
-def export(request, id):
-    return HttpResponse('page export dengan id = ' + str(id))
-
-
-@csrf_protect
-def ctxGiven(request, id):
-    statement = request.POST.get("statement")
-    component = request.POST.get("component")
-    delete = request.POST.get("delete")
-    c_id = request.POST.get("c_id")
-
-    if c_id != None and c_id != "" and delete != None and delete == "true":
-        c = Context.objects.get(id=c_id)
-        print("Delete")
-        c.delete()
-        return redirect('project_details', request.session["project"])
-
-    if statement != None and component != None:
-        if c_id != None and c_id != "":
-            c = Context.objects.get(id=c_id)
-            if component is "":
-                c.component_id = None
+                g = "And "
+            isi = given.uss()
+            p += "\t\t" + g + isi + "\n"
+            c += 1
+        c = 1
+        for when in scene.when():
+            if c == 1:
+                w = "When "
             else:
-                c.component_id = component
-            c.context_statement = statement
-            c.save()
-        else:
-            if component == "":
-                component = None
-            c = Context(
-                wireframe_id=request.session["project"],
-                context_type="given",
-                component_id=component,
-                activity_id=None,
-                context_conjunction="for",
-                context_statement=statement
-            )
-            c.save()
-    return redirect('project_details', request.session["project"])
+                w = "And "
+            isi = when.uss()
+            p += "\t\t" + w + isi + "\n"
+            c += 1
+        c = 1
+        for then in scene.then():
+            if c == 1:
+                t = "Then "
+            else:
+                t = "And "
+            isi = then.uss()
+            p += "\t\t" + t + isi + "\n"
+            c += 1
+        p += "\n"
+    text = text.replace('<s>', p)
 
+    # write file dari data diatas
+    file = open(filepath, 'w')
+    file.write(text)
+    file.close()
 
-@csrf_protect
-def ctxWhen(request, id):
-    statement = request.POST.get("statement")
-    rule = request.POST.get("rule")
-    conjunction = request.POST.get("conjunction")
-    c_id = request.POST.get("c_id")
-    delete = request.POST.get("delete")
-
-    if c_id != None and c_id != "" and delete != None and delete == "true":
-        c = Context.objects.get(id=c_id)
-        c.delete()
-        return redirect('project_details', request.session["project"])
-
-    if statement != None and rule != None and conjunction != None:
-        if c_id != None and c_id != "":
-            c = Context.objects.get(id=c_id)
-            c.rule_id = rule
-            c.context_conjunction = conjunction
-            c.context_statement = statement
-            c.save()
-        else:
-            c = Context(
-                wireframe_id=request.session["project"],
-                context_type="when",
-                component_id=None,
-                rule_id=rule,
-                activity_id=None,
-                context_conjunction=conjunction,
-                context_statement=statement
-            )
-        c.save()
-    return redirect('project_details', request.session["project"])
-
-
-@csrf_protect
-def ctxThen(request, id):
-    activity = request.POST.get("activity")
-    tipe = request.POST.get("type")
-    delete = request.POST.get("delete")
-    c_id = request.POST.get("c_id")
-
-    if c_id != None and c_id != "" and delete != None and delete == "true":
-        c = Context.objects.get(id=c_id)
-        print("Delete")
-        c.delete()
-        return redirect('project_details', request.session["project"])
-    
-    if activity is not None and tipe is not None:
-        if c_id is not None and c_id is not "":
-            c = Context.objects.get(id=c_id)
-            c.activity_id = activity
-            c.save()
-        else:
-            c = Context(
-                wireframe_id=request.session["project"],
-                context_type=tipe,
-                component_id=None,
-                activity_id=activity,
-                context_conjunction=None,
-                context_statement=None
-            )
-            c.save()
-    return redirect('project_details', request.session["project"])
-
-
-@csrf_protect
-def ctxAThen(request, id):
-    activity = request.POST.get("activity")
-    type = request.POST.get("type")
-    c_id = request.POST.get("c_id")
-    delete = request.POST.get("delete")
-
-    if c_id != None and delete != None and delete == "true":
-        c = Context.objects.get(id=c_id)
-        c.delete()
-        return redirect('project_details', request.session["project"])
-
-    if activity != None and type != None:
-        if c_id != None and c_id != "":
-            c = Context.objects.get(id=c_id)
-            c.activity_id = activity
-            c.save()
-        else:
-            c = Context(
-                wireframe_id=request.session["project"],
-                context_type=type,
-                activity_id=activity,
-            )
-            c.save()
-    return redirect('project_details', request.session["project"])
+    # Open the file for reading content
+    path = open(filepath, 'r')
+    # Set the mime type
+    mime_type, _ = mimetypes.guess_type(filepath)
+    # Set the return value of the HttpResponse
+    response = HttpResponse(path, content_type=mime_type)
+    # Set the HTTP header for sending to browser
+    response['Content-Disposition'] = "attachment; filename=%s" % request.session["project_name"] + "_uss.feature"
+    # Return the response value
+    return response

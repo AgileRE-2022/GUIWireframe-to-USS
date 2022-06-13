@@ -1,0 +1,15 @@
+Feature:
+	In order to see dashboard page
+	As a User
+	I want to submit my email and password
+
+	Scenario: Memasukkan email
+		Given im on page Login
+		when I fill in input_field "Enter text here   " with bla@email.com
+		then Then the <component> element should contain bla@email.com
+
+	Scenario: Memasukkan password
+		Given im on page Login
+		when I fill in input_field "Enter text here   " with passwordddddd
+		then Then I should see benar
+

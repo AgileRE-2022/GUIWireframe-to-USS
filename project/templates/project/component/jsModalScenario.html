@@ -1,0 +1,151 @@
+<script>
+    const modalScenario = document.querySelector('#modalScenario')
+    const optionComponent = modalScenario.querySelectorAll('.when-select-component option')
+
+    let whenModalScenarioListener = () => {
+        var select = modalScenario.querySelector('.when-select-template')
+        var value = select.value
+        var selectComponent = modalScenario.querySelector('.when-select-component')
+        if (!value.includes("<component>")) {
+            selectComponent.style.display = "none"
+        } else {
+            selectComponent.style.display = "block"
+            var text = select.options[select.selectedIndex].text
+            selectComponent.innerHTML = ""
+            selectComponent.removeAttribute("disabled")
+
+            var node = document.createElement("option")
+            node.setAttribute("selected", "true")
+            node.setAttribute("disabled", "true")
+            node.setAttribute("value", "")
+            node.innerHTML = "Select Element"
+            selectComponent.appendChild(node)
+
+            if (text.includes("<field>")) {
+                optionComponent.forEach(option => {
+                    if (option.text.includes("input_field")) {
+                        selectComponent.appendChild(option)
+                    }
+                });
+            } else if (text.includes("<button>")) {
+                optionComponent.forEach(option => {
+                    if (option.text.includes("button")) {
+                        selectComponent.appendChild(option)
+                    }
+                });
+            } else if (text.includes("<checkbox>")) {
+                optionComponent.forEach(option => {
+                    if (option.text.includes("checked_box")) {
+                        selectComponent.appendChild(option)
+                    } else if (option.text.includes("checked_radio")) {
+                        selectComponent.appendChild(option)
+                    }
+                });
+            } else if (text.includes("<dropdown>")) {
+                optionComponent.forEach(option => {
+                    if (option.text.includes("droplist")) {
+                        selectComponent.appendChild(option)
+                    }
+                });
+            } else {
+                optionComponent.forEach(option => {
+                    selectComponent.appendChild(option)
+                });
+            }
+
+            if (selectComponent.options.length == 1) {
+                var node = document.createElement("option")
+                node.setAttribute("selected", "true")
+                node.setAttribute("disabled", "true")
+                node.setAttribute("value", "")
+                node.innerHTML = "you dont have option, please select other"
+                selectComponent.innerHTML = ""
+                selectComponent.appendChild(node)
+                selectComponent.setAttribute("disabled", "true")
+            }
+            selectComponent.selectedIndex = 0
+        }
+
+        if (!value.includes("<statement>")) {
+            modalScenario.querySelector('.when-statement').style.display = "none"
+        } else {
+            modalScenario.querySelector('.when-statement').style.display = "block"
+            modalScenario.querySelector('.when-statement').value = null
+        }
+    }
+
+    let thenModalScenarioListener = () => {
+        var select = modalScenario.querySelector('.then-select-template')
+        var value = select.value
+        var selectComponent = modalScenario.querySelector('.then-select-component')
+
+        if (!value.includes("<component>")) {
+            selectComponent.style.display = "none"
+        } else {
+            selectComponent.style.display = "block"
+
+            var text = select.options[select.selectedIndex].text
+            selectComponent.innerHTML = ""
+            selectComponent.removeAttribute("disabled")
+
+            var node = document.createElement("option")
+            node.setAttribute("selected", "true")
+            node.setAttribute("disabled", "true")
+            node.setAttribute("value", "")
+            node.innerHTML = "Select Element"
+            selectComponent.appendChild(node)
+
+            if (text.includes("<field>")) {
+                optionComponent.forEach(option => {
+                    if (option.text.includes("input_field")) {
+                        selectComponent.appendChild(option)
+                    }
+                })
+            } else if (text.includes("<checkbox>")) {
+                optionComponent.forEach(option => {
+                    if (option.text.includes("checkbox")) {
+                        selectComponent.appendChild(option)
+                    } else if (option.text.includes("checked_radio")) {
+                        selectComponent.appendChild(option)
+                    }
+                })
+            } else if (text.includes("<element>")) {
+                for (let index = 1; index < optionComponent.length; index++) {
+                    const element = optionComponent[index];
+                    selectComponent.appendChild(element)
+                }
+            }
+
+            if (selectComponent.options.length == 1) {
+                var node = document.createElement("option")
+                node.setAttribute("selected", "true")
+                node.setAttribute("disabled", "true")
+                node.setAttribute("value", "")
+                node.innerHTML = "you dont have option, please select other"
+                selectComponent.innerHTML = ""
+                selectComponent.appendChild(node)
+                selectComponent.setAttribute("disabled", "true")
+            }
+            selectComponent.selectedIndex = 0
+        }
+
+        if (!value.includes("<statement>")) {
+            modalScenario.querySelector('.then-statement').style.display = "none"
+        } else {
+            modalScenario.querySelector('.then-statement').style.display = "block"
+            modalScenario.querySelector('.then-statement').value = null
+        }
+    }
+
+    const modalScenarioEdit = document.querySelector('#modalScenarioEdit')
+
+    document.querySelectorAll('.scenario-edit-trigger').forEach(btn => {
+        btn.addEventListener('click', () => {
+            var id = btn.dataset.id
+            var scene = btn.dataset.scenario
+
+            modalScenarioEdit.querySelector('#s_id').value = id
+            modalScenarioEdit.querySelector('#inputScenario').value = scene
+        })
+    })
+</script>

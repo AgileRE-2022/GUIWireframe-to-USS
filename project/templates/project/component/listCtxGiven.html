@@ -1,0 +1,24 @@
+{% for given in scene.given %}
+    <p class="card-text">
+        <button class="btn btn-warning edit-ctx-given"
+                data-bs-toggle="modal"
+                data-bs-target="#modalContextGiven"
+                data-id="{{ given.id }}"
+                data-statement="{{ given.context_statement }}"
+                data-template="{{ given.context_template }}">
+            EDIT
+        </button>
+        <button class="btn btn-danger delete-ctx-given"
+                data-id="{{ given.id }}"
+                {% if forloop.counter == 1 %}disabled{% endif %}>
+            DELETE
+        </button>
+        <span class="text-muted h5">
+            {% if forloop.counter == 1 %}
+                GIVEN
+            {% else %}
+                AND
+            {% endif %}
+        </span> {{ given.text }}
+    </p>
+{% endfor %}

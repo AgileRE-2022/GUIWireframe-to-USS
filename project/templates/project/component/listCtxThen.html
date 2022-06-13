@@ -1,0 +1,23 @@
+{% for then in scene.then %}
+    <p class="card-text">
+        <button class="btn btn-warning edit-ctx-then"
+                data-bs-toggle="modal"
+                data-bs-target="#modalContextThen"
+                data-id="{{ then.id }}"
+                data-statement="{{ then.context_statement }}"
+                data-template="{{ then.context_template }}"
+                data-component="{{ then.component_id }}">
+            EDIT
+        </button>
+        <button class="btn btn-danger delete-ctx-then"
+                data-id="{{ then.id }}"
+                {% if forloop.counter == 1 %}disabled{% endif %}>DELETE</button>
+        <span class="text-muted h5">
+            {% if forloop.counter == 1 %}
+                then
+            {% else %}
+                AND
+            {% endif %}
+        </span> {{ then.text }}
+    </p>
+{% endfor %}

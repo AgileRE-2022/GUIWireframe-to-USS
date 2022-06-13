@@ -1,0 +1,134 @@
+<script>
+    const thenModal = document.querySelector('#modalContextThen') // Id modal
+    // nampilin di edit
+    document.querySelectorAll('.edit-ctx-then').forEach(btn => {
+        btn.addEventListener('click', () => {
+            thenModal.querySelector('.modal-title').innerHTML = "Edit Then" //title
+            thenModal.querySelector('.then-edit-type').value = "edit-then" //id yang di edit 
+            thenModal.querySelector('.s_id').value = btn.dataset.id //
+            thenModal.querySelector('#then-input-statement').value = btn.dataset.statement
+
+            if (btn.dataset.statement == "None") {
+                thenModal.querySelector('#then-input-statement').style.display = "none"
+            } else {
+                thenModal.querySelector('#then-input-statement').style.display = "block"
+            }
+
+            if (btn.dataset.component == "None") {
+                thenModal.querySelector('select.then-select-component').style.display = "none"
+            } else {
+                thenModal.querySelector('select.then-select-component').style.display = "block"
+            }
+
+            var selectedIndex = 0
+            try {
+                thenModal.querySelectorAll('select.then-select-template option').forEach(e => {
+                    if (e.value == btn.dataset.template) {
+                        throw 'Break'
+                    }
+                    selectedIndex++
+                })
+            } catch (e) {
+                if (e !== 'Break') throw e
+            }
+            thenModal.querySelector('select.then-select-template').selectedIndex = selectedIndex
+
+            if (btn.dataset.component != "None") {
+                var selectedIndex = 0
+                try {
+                    thenModal.querySelectorAll('select.then-select-component option').forEach(e => {
+                        if (e.value == btn.dataset.component) {
+                            throw 'Break'
+                        }
+                        selectedIndex++
+                    })
+                } catch (e) {
+                    if (e !== 'Break') throw e
+                }
+                thenModal.querySelector('select.then-select-component').selectedIndex = selectedIndex
+            }
+        })
+    })
+    document.querySelectorAll('.delete-ctx-then').forEach(btn => {
+        btn.addEventListener('click', () => {
+            thenModal.querySelector('.then-edit-type').value = "delete-then" //id yang di edit 
+            thenModal.querySelector('.s_id').value = btn.dataset.id //
+            thenModal.querySelector('#then-submit-btn').click()
+
+        })
+    })
+
+    document.querySelectorAll('.add-ctx-then').forEach(btn => {
+        btn.addEventListener('click', () => {
+            thenModal.querySelector('.modal-title').innerHTML = "Add Then" //title
+            thenModal.querySelector('.then-edit-type').value = "add-then" //id yang di edit 
+            thenModal.querySelector('.s_id').value = btn.dataset.id //
+            thenModal.querySelector('#then-input-statement').value = null
+            thenModal.querySelector('select.then-select-template').selectedIndex = 0
+            thenModal.querySelector('select.then-select-component').selectedIndex = 0
+        })
+    })
+
+    const optionComponentModalThen = thenModal.querySelectorAll('select.then-select-component option')
+    let thenEditListener = () => {
+        var select = thenModal.querySelector('.then-select-template')
+        var value = select.value
+        var selectComponent = thenModal.querySelector('.then-select-component')
+
+        if (!value.includes("<component>")) {
+            selectComponent.style.display = "none"
+        } else {
+            selectComponent.style.display = "block"
+
+            var text = select.options[select.selectedIndex].text
+            selectComponent.innerHTML = ""
+            selectComponent.removeAttribute("disabled")
+
+            var node = document.createElement("option")
+            node.setAttribute("selected", "true")
+            node.setAttribute("disabled", "true")
+            node.setAttribute("value", "")
+            node.innerHTML = "Select Element"
+            selectComponent.appendChild(node)
+
+            if (text.includes("<field>")) {
+                optionComponentModalThen.forEach(option => {
+                    if (option.text.includes("input_field")) {
+                        selectComponent.appendChild(option)
+                    }
+                })
+            } else if (text.includes("<checkbox>")) {
+                optionComponentModalThen.forEach(option => {
+                    if (option.text.includes("checkbox")) {
+                        selectComponent.appendChild(option)
+                    } else if (option.text.includes("checked_radio")) {
+                        selectComponent.appendChild(option)
+                    }
+                })
+            } else if (text.includes("<element>")) {
+                for (let index = 1; index < optionComponentModalThen.length; index++) {
+                    const element = optionComponentModalThen[index];
+                    selectComponent.appendChild(element)
+                }
+            }
+
+            if (selectComponent.options.length == 1) {
+                var node = document.createElement("option")
+                node.setAttribute("selected", "true")
+                node.setAttribute("disabled", "true")
+                node.setAttribute("value", "")
+                node.innerHTML = "you dont have option, please select other"
+                selectComponent.innerHTML = ""
+                selectComponent.appendChild(node)
+                selectComponent.setAttribute("disabled", "true")
+            }
+            selectComponent.selectedIndex = 0
+        }
+
+        if (!value.includes("<statement>")) {
+            thenModal.querySelector('.then-statement').style.display = "none"
+        } else {
+            thenModal.querySelector('.then-statement').style.display = "block"
+        }
+    }
+</script>
