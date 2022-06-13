@@ -65,60 +65,41 @@
                 <div class="card-header h4">Scenario : {{ scene.scenario_title }}</div>
                 <div class="card-body">
                     <div class="mb-2">
-                        <button class="btn btn-warning mx-2">Edit Scenario</button>
+                        <button class="btn btn-warning mx-2 scenario-edit-trigger"
+                                data-bs-toggle="modal"
+                                data-bs-target="#modalScenarioEdit"
+                                data-id="{{ scene.id }}"
+                                data-scenario="{{ scene.scenario_title }}">
+                            Edit Scenario
+                        </button>
                         <button class="btn btn-danger mx-2">Delete Scenario</button>
                     </div>
                     <div class="mb-4">
-                        <button class="btn btn-primary mx-2">Add Given</button>
-                        <button class="btn btn-primary mx-2">Add When</button>
-                        <button class="btn btn-primary mx-2">Add Then</button>
+                        <button class="btn btn-primary mx-2 add-ctx-given"
+                                data-bs-toggle="modal"
+                                data-bs-target="#modalContextGiven"
+                                data-id="{{ scene.id }}">
+                            Add Given
+                        </button>
+                        <button class="btn btn-primary mx-2 add-ctx-when"
+                                data-bs-toggle="modal"
+                                data-bs-target="#modalContextWhen"
+                                data-id="{{ scene.id }}">
+                            Add When
+                        </button>
+                        <button class="btn btn-primary mx-2 add-ctx-then"
+                                data-bs-toggle="modal"
+                                data-bs-target="#modalContextThen"
+                                data-id="{{ scene.id }}">
+                            Add Then
+                        </button>
                     </div>
-                    {% for given in scene.given %}
-                        <p class="card-text">
-                            <button class="btn btn-warning">EDIT</button>
-                            <button class="btn btn-danger"
-                                    {% if forloop.counter == 1 %}disabled{% endif %}>DELETE</button>
-                            <span class="text-muted h5">
-                                {% if forloop.counter == 1 %}
-                                    GIVEN
-                                {% else %}
-                                    AND
-                                {% endif %}
-                            </span> {{ given.text }}
-                        </p>
-                    {% endfor %}
-                    {% for when in scene.when %}
-                        <p class="card-text">
-                            <button class="btn btn-warning">EDIT</button>
-                            <button class="btn btn-danger"
-                                    {% if forloop.counter == 1 %}disabled{% endif %}>DELETE</button>
-                            <span class="text-muted h5">
-                                {% if forloop.counter == 1 %}
-                                    WHEN
-                                {% else %}
-                                    AND
-                                {% endif %}
-                            </span> {{ when.text }}
-                        </p>
-                    {% endfor %}
-                    {% for then in scene.then %}
-                        <p class="card-text">
-                            <button class="btn btn-warning">
-                                EDIT
-                            </button>
-                            <button class="btn btn-danger"
-                                    {% if forloop.counter == 1 %}disabled{% endif %}>
-                                DELETE
-                            </button>
-                            <span class="text-muted h5">
-                                {% if forloop.counter == 1 %}
-                                    then
-                                {% else %}
-                                    AND
-                                {% endif %}
-                            </span> {{ then.text }}
-                        </p>
-                    {% endfor %}
+                    {% comment %} given {% endcomment %}
+                    {% include 'project/component/listCtxGiven.html' %}
+                    {% comment %} when {% endcomment %}
+                    {% include 'project/component/listCtxWhen.html' %}
+                    {% comment %} then {% endcomment %}
+                    {% include 'project/component/listCtxThen.html' %}
                 </div>
             </div>
         {% endfor %}
@@ -127,14 +108,13 @@
 {% block modal %}
     {% comment %} Given {% endcomment %}
     {% include 'project/component/modalCtxGiven.html' %}
-    {% comment %} Alt-Then {% endcomment %}
-    {% include 'project/component/modalCtxAltThen.html' %}
     {% comment %} when {% endcomment %}
     {% include 'project/component/modalCtxWhen.html' %}
     {% comment %} Then {% endcomment %}
     {% include 'project/component/modalCtxThen.html' %}
     {% comment %} Modal Scenario {% endcomment %}
     {% include 'project/component/modalScenario.html' %}
+    {% include 'project/component/modalScenarioEdit.html' %}
 {% endblock modal %}
 {% block js %}
     <script>
@@ -154,7 +134,6 @@
     </script>
     {% include 'project/component/jsCtxGiven.html' %}
     {% include 'project/component/jsCtxWhen.html' %}
-    {% include 'project/component/jsCtxAltThen.html' %}
     {% include 'project/component/jsCtxThen.html' %}
     {% include 'project/component/jsModalScenario.html' %}
 {% endblock js %}

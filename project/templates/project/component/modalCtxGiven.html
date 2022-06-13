@@ -1,49 +1,54 @@
 <div class="modal fade"
-         id="ctxGivenModal"
-         tabindex="-1"
-         aria-labelledby="ctxGivenModalLabel"
-         aria-hidden="true">
-        <div class="modal-dialog">
-            <form action="{% url 'project_context_given' request.session.project %}"
-                  class="modal-content"
-                  method="post">
-                {% csrf_token %}
-                <div class="modal-header">
-                    <h5 class="modal-title" id="ctxGivenModalLabel">Add Given</h5>
-                    <button type="button"
-                            class="btn-close"
-                            data-bs-dismiss="modal"
-                            aria-label="Close"></button>
+     id="modalContextGiven"
+     tabindex="-1"
+     aria-labelledby="modalContextGivenLabel"
+     aria-hidden="true">
+    <div class="modal-dialog modal-dialog-scrollable">
+        <form action="{% url 'project_scenario_edit' request.session.project %}"
+              class="modal-content"
+              method="post">
+            {% csrf_token %}
+            <input type="hidden" name="s_id" class="s_id">
+            <input type="hidden" name="edit_type" value="" class="given-edit-type">
+            <div class="modal-header">
+                <h5 class="modal-title" id="modalContextGivenLabel">Add Scenario</h5>
+                <button type="button"
+                        class="btn-close"
+                        data-bs-dismiss="modal"
+                        aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <div class="mb-3">
+                    <label for="" class="form-label">Given</label>
+                    <div class="row">
+                        <div class="col-4">
+                            <select class="form-select"
+                                    id="given-template"
+                                    name="given-template"
+                                    aria-label="Default select example">
+                                <option value="im on url &lt;statement&gt;" selected>
+                                    im on url
+                                </option>
+                                <option value="im on page &lt;statement&gt;">
+                                    im on page
+                                </option>
+                            </select>
+                        </div>
+                        <div class="col-8">
+                            <input type="text"
+                                   name="given-statement"
+                                   class="form-control"
+                                   placeholder="some url / page"
+                                   id="given-input-statement">
+                        </div>
+                    </div>
+                    <div id="" class="form-text mb-3">set for now, you can add/edit later</div>
                 </div>
-                <div class="modal-body">
-                    <input type="hidden" name="c_id" class="given-c_id">
-                    <input type="hidden" name="delete" class="given-delete" value="false">
-                    <input type="text"
-                           name="statement"
-                           class="form-control given-statement"
-                           id=""
-                           placeholder="Some Statement">
-                    <div class="m-3">for</div>
-                    <select class="form-select given-component"
-                            name="component"
-                            aria-label="Default select example">
-                        <option selected disabled>
-                            Select Component
-                        </option>
-                        <option value="">
-                            no component
-                        </option>
-                        {% for c in components %}
-                            <option value="{{ c.id }}">
-                                {{ c.value }} | {{ c.type_component }}
-                            </option>
-                        {% endfor %}
-                    </select>
-                </div>
-                <div class="modal-footer">
-                    <button type="button" class="btn btn-danger" data-bs-dismiss="modal">Cancel</button>
-                    <button type="submit" class="btn btn-primary given-submit-btn">Save</button>
-                </div>
-            </form>
-        </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-danger" data-bs-dismiss="modal">Cancel</button>
+                <button type="submit" class="btn btn-primary" id="given-submit-btn">Save</button>
+            </div>
+        </form>
     </div>
+</div>

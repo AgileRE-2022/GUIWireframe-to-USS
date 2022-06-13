@@ -31,7 +31,7 @@
                        {% for a in activities %}
                            <option value="{{ a.id }}">
                             {{ a.activity_name }} | 
-                            {% if a.component_id is not None %}
+                            {% if a.component_id != None %}
                                 {{ a.comp.value }} (Type : {{ a.comp.type_component }})
                             {% endif %}
                            </option>
