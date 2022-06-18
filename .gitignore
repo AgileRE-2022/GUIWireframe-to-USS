@@ -1,1 +1,6 @@
 project/functions/uss.feature
+passenger_wsgi.py
+public
+tmp
+*.pyc
+.htaccess

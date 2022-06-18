@@ -26,8 +26,7 @@ SECRET_KEY = 'django-insecure-ru+wnlmp^sa3mas637&@6x&=1l$zd2lt=ky2v9$t4z#-5u%j#@
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = []
-
+ALLOWED_HOSTS = ['*','127.0.0.1','localhost','yagrariksa.site','www.yagrariksa.site','ppl.yagrariksa.site','www.ppl.yagrariksa.site']
 
 # Application definition
 
@@ -79,9 +78,9 @@ WSGI_APPLICATION = 'PPL_kel_1.wsgi.application'
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.mysql',
-        'NAME': 'django_ppl',
-        'USER': 'root',
-        'PASSWORD': 'rootr00t',
+        'NAME': 'tumbasba_ppl',
+        'USER': 'tumbasba_ppl',
+        'PASSWORD': 'ytYSD@wieTve',
         'PORT': '3306',
         'HOST': 'localhost',
     }
