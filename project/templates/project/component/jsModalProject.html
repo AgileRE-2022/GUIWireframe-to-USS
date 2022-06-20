@@ -1,0 +1,20 @@
+<script>
+    const modalImageSALT = document.querySelector('#modalSaltImage')
+    const textarea = document.querySelector('#modalSaltInput')
+    const modalForm = document.querySelector('#modalProject')
+
+    document.querySelector('#btnEditProject').addEventListener('click', () => {
+        modalImageSALT.setAttribute('src', 'http://www.plantuml.com/plantuml/png/' + compress(textarea.value))
+    })
+
+    document.querySelector('#btnDeleteProject').addEventListener('click', () => {
+        modalForm.querySelector('#modalProject-mode').value = "delete"
+        modalForm.querySelector('#modalProject-submit-btn').click()
+    })
+
+    const showModalWireframe = () => {
+        console.log(textarea.value)
+        let saltSyntax = textarea.value;
+        modalImageSALT.setAttribute('src', 'http://www.plantuml.com/plantuml/png/' + compress(saltSyntax))
+    }
+</script>

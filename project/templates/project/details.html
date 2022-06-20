@@ -10,7 +10,17 @@
             <div class="h3 mb-3">Wireframe</div>
             <div class="row mx-1">
                 <a href="{% url 'project_download' request.session.project %}"
-                   class="btn btn-primary">Export to User-Story Scenario</a>
+                   class="btn btn-primary mb-3">Export to User-Story Scenario</a>
+                <div class="d-flex flex-row p-0" style="gap: 1rem">
+                    <button style="width: 100%;"
+                            class="btn btn-warning"
+                            data-bs-toggle="modal"
+                            data-bs-target="#modalProject"
+                            id="btnEditProject">
+                        Edit Project
+                    </button>
+                    <button style="width: 100%;" class="btn btn-danger" id="btnDeleteProject">Delete Project</button>
+                </div>
                 <div class="col-6 mt-4 text-muted h6" style="white-space: pre-wrap;">{{ wireframe.project_file }}</div>
                 <div class="col-6 mt-4 justify-content-center align-items-center card">
                     <img src="#"
@@ -74,9 +84,7 @@
                             Edit Scenario
                         </button>
                         <button class="btn btn-danger mx-2 scenario-delete-trigger"
-                                data-id="{{ scene.id }}">
-                            Delete Scenario
-                        </button>
+                                data-id="{{ scene.id }}">Delete Scenario</button>
                     </div>
                     <div class="mb-4">
                         <button class="btn btn-primary mx-2 add-ctx-given"
@@ -119,6 +127,8 @@
     {% comment %} Modal Scenario {% endcomment %}
     {% include 'project/component/modalScenario.html' %}
     {% include 'project/component/modalScenarioEdit.html' %}
+    {% comment %} Modal Project {% endcomment %}
+    {% include 'project/component/modalProject.html' %}
 {% endblock modal %}
 {% block js %}
     <script>
@@ -140,4 +150,5 @@
     {% include 'project/component/jsCtxWhen.html' %}
     {% include 'project/component/jsCtxThen.html' %}
     {% include 'project/component/jsModalScenario.html' %}
+    {% include 'project/component/jsModalProject.html' %}
 {% endblock js %}

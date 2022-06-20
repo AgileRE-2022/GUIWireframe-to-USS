@@ -1,0 +1,79 @@
+<div class="modal fade"
+     id="modalProject"
+     tabindex="-1"
+     aria-labelledby="modalProjectLabel"
+     aria-hidden="true">
+    <div class="modal-dialog modal-dialog-scrollable">
+        <form action="{% url 'project_details' request.session.project %}"
+              class="modal-content"
+              method="post">
+            {% csrf_token %}
+            <input type="hidden" name="mode" value="edit" id="modalProject-mode">
+            <div class="modal-header">
+                <h5 class="modal-title" id="modalProjectLabel">Edit Project</h5>
+                <button type="button"
+                        class="btn-close"
+                        data-bs-dismiss="modal"
+                        aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <div class="mb-3">
+                    <label for="projectTitle" class="form-label">Project Title</label>
+                    <input name="project_name"
+                           type="text"
+                           class="form-control"
+                           id="projectTitle"
+                           placeholder="the Scenario"
+                           value="{{ request.session.project_name }}">
+                </div>
+                <div class="mb-3">
+                    <label for="projectTitle" class="form-label">Project User Story</label>
+                    <div class="input-group mb-3">
+                        <span class="input-group-text" id="basic-addon1">In Order To</span>
+                        <input type="text"
+                               class="form-control"
+                               placeholder="do something"
+                               name="project_purpose"
+                               value="{{ wireframe.project_us_purpose }}">
+                    </div>
+                    <div class="input-group mb-3">
+                        <span class="input-group-text" id="basic-addon1">As a</span>
+                        <input type="text"
+                               class="form-control"
+                               placeholder="someone"
+                               name="project_user"
+                               value="{{ wireframe.project_us_user }}">
+                    </div>
+                    <div class="input-group mb-3">
+                        <span class="input-group-text" id="basic-addon1">I want to</span>
+                        <input type="text"
+                               class="form-control"
+                               placeholder="do something"
+                               name="project_todo"
+                               value="{{ wireframe.project_us_todo }}">
+                    </div>
+                </div>
+                <label for="floatingTextarea2" class="form-label">SALT Wireframe Script</label>
+                <div class="form-text">change your SALT wireframe makes delete all your scenario.</div>
+                <div class="row">
+                    <div class="col-12">
+                        <div class="form-outline">
+                            <textarea onkeyup="showModalWireframe()"
+                                      class="form-control"
+                                      id="modalSaltInput"
+                                      rows="10"
+                                      name="saltScript">{{ wireframe.project_file }}</textarea>
+                        </div>
+                    </div>
+                    <div class="col-12 align-items-center justify-content-center card">
+                        <img id="modalSaltImage" src="#">
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-danger" data-bs-dismiss="modal">Cancel</button>
+                <button type="submit" class="btn btn-primary" id="modalProject-submit-btn">Save</button>
+            </div>
+        </form>
+    </div>
+</div>
