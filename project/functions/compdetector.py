@@ -33,6 +33,13 @@ def cleanFirst(baris):
     baris = baris.replace("\t","")
     return baris
 
+def link(salt, id):
+    for i in range(len(salt)):
+        if salt[i][0:1] == "__":
+            mInner = salt[i].replace("_","")
+            db = Component(type_component="link",value=salt[i],wireframe_id=id, inner=mInner)
+            db.save()
+
 def checkbox(salt, id):
     ubox = "[]"
     cbox = "[X]"    
